@@ -1,0 +1,10 @@
+
+tasks:
+  image: registry.gitlab.com/mffd3s/nswi177/student:latest
+  script:
+    - ./bin/run_tests.sh tasks
+
+quizzes:
+  image: registry.gitlab.com/mffd3s/nswi177/student:latest
+  script:
+    - ./bin/run_tests.sh quizzes
