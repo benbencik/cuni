@@ -6,8 +6,14 @@ def main():
         num = int(f.readline())
         if num <= 0: print('-')
         else:
-            for i in range(1, int(math.sqrt(num))):
-                if num % i == 0: print(i)
+            i = 2
+            while i * i <= num:
+                if num % i:
+                    i += 1
+                else:
+                    num //= i
+                    print(i)
+            print(num)
 
 if __name__ == '__main__':
     main()
