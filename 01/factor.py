@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
+import math
 
 def main():
-    print('-')
+    with open("input.txt") as f:
+        num = int(f.readline())
+        for i in range(1, int(math.sqrt(num))):
+            if num % i == 0: print(i)
 
 if __name__ == '__main__':
     main()
