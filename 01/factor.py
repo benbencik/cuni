@@ -3,7 +3,11 @@ import math
 
 def main():
     with open("input.txt") as f:
-        num = int(f.readline())
+        try: num = int(f.readline())
+        except: 
+            print('-')
+            return
+
         if num <= 0: print('-')
         else:
             i = 2
