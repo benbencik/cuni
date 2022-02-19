@@ -13,7 +13,7 @@ Vaši odpověď vložte do označeného bloku (místo tří teček).
 Stručně napište, co pro vás bylo nejnáročnější na předchozím cvičení.
 
 
-Vaše odpověď: **[A1]** Zorientovanie sa v GitLabe **[/A1]**
+Vaše odpověď: **[A1]** Zorientovanie sa v GitLabe bolo najnáročnejšie. **[/A1]**
 
 
 
