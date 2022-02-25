@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 
 def rec_print(path, indentation):
