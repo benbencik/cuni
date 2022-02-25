@@ -1,10 +1,15 @@
+image: registry.gitlab.com/mffd3s/nswi177/student:latest
 
-tasks:
-  image: registry.gitlab.com/mffd3s/nswi177/student:latest
-  script:
-    - ./bin/run_tests.sh tasks
+# Generic rules: do not re-run anything when adding a tag
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - when: always
 
-quizzes:
-  image: registry.gitlab.com/mffd3s/nswi177/student:latest
-  script:
-    - ./bin/run_tests.sh quizzes
+stages:
+  - tests
+
+# Fetch the most up-to-date definition from tests repository
+include:
+  - remote: 'https://gitlab.mff.cuni.cz/teaching/nswi177/2022/common/tests/-/raw/master/ci.yml'
