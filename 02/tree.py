@@ -7,15 +7,13 @@ def rec_print(path, indentation):
     dir = {}
 
     for thing in curr_dir:
-        if (thing.name[0] != '.'):
-            
-            if thing.is_dir(): 
+        if (thing.name[0] != '.'): # do not show hidden files 
+            if thing.is_dir(follow_symlinks=False):  # do not show simlinks
                 items.append(thing.name)
                 dir[thing.name] = True
-            elif (thing.is_file(follow_symlinks=False)):
+            elif thing.is_file(follow_symlinks=False):  # do not show simlinks
                 items.append(thing.name)
                 dir[thing.name] = False
-    
     items.sort()
 
     if indentation == 0: path=''
