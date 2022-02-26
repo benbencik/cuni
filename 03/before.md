@@ -34,7 +34,7 @@ Vyberte který příkaz ze seznamu nejlépe odpovídá tomu, co bude skutečně 
 4. Nic z výše uvedeného, protože příkaz nedává smysl.
 5. Nejde určit, protože to záleží na pracovním (aktuálním) adresáři.
 
-Vaše odpověď: **[A2]** /usr/bin/env python3 script.py alpha.txt **[/A2]**
+Vaše odpověď: **[A2]** 2 **[/A2]**
 
 
 
