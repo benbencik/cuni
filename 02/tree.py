@@ -3,21 +3,24 @@ import os
 
 def rec_print(path, indentation):
     curr_dir = os.scandir(path)
-    files, directories = [], []
+    items = []
+    dir = {}
+
     for thing in curr_dir:
-        if thing.is_dir(): directories.append(thing.name)
-        elif (thing.is_file(follow_symlinks=False)): files.append(thing.name)
+        items.append(thing.name)
+        if thing.is_dir(): dir[thing.name] = True
+        else: dir[thing.name] = False
     
-    directories.sort()
-    files.sort()
+    items.sort()
 
     if indentation == 0: path=''
-    for d in directories:
-        if d[0] != '.':
-            print('\t'*indentation + d + '/')
-            rec_print(os.path.join(path, d), indentation+1)
-    for f in files:
-        if f[0] != '.': print('\t'*indentation + f)
+    for x in items:
+        if (x[0] != '.'):
+            if dir[x]:
+                print('\t'*indentation + x + '/')
+                rec_print(os.path.join(path, x), indentation+1)
+            else: 
+                print('\t'*indentation + x)
 
 
 def main():
