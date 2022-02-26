@@ -5,4 +5,4 @@
 
 **Q2** Insert here the wildcard pattern that you have used.
 
-**[A2]** cat [0-9][studentbencikb]z.txt **[/A2]**
+**[A2]** cat [0-9][bencik]z.txt **[/A2]**

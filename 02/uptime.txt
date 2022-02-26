@@ -1,9 +1,9 @@
 The file /proc/uptime virtually contains how long has be machine been running.
+When I print the contents of the file (`cat proc/time`) I get two floating point numbers.
 
+As described in the manpages the command cut removes section of each line in a specified file.
+ → the argument -d is used to specify delimeter which we have set to ' '
+ → the -f argument followed by a number selcts an item
 
-As described in the manpages the command cut removes section of specified file
- → the argument -d is used to specifi delimeter which we have set to ' '
- → the -f argument followed by a number specifies which of the two numbers should be selected
-
-Therefore the command takes the one and only line of /proc/uptime separates it according to
-specified delimiter and the select the first item. 
+Therefore the command takes the one and only line of /proc/uptime separates it by the ' ' character
+ and then selects the first number. 
