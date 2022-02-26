@@ -7,20 +7,24 @@ def rec_print(path, indentation):
     dir = {}
 
     for thing in curr_dir:
-        items.append(thing.name)
-        if thing.is_dir(): dir[thing.name] = True
-        else: dir[thing.name] = False
+        if (thing.name[0] != '.'):
+            
+            if thing.is_dir(): 
+                items.append(thing.name)
+                dir[thing.name] = True
+            elif (thing.is_file(follow_symlinks=False)):
+                items.append(thing.name)
+                dir[thing.name] = False
     
     items.sort()
 
     if indentation == 0: path=''
     for x in items:
-        if (x[0] != '.'):
-            if dir[x]:
-                print('\t'*indentation + x + '/')
-                rec_print(os.path.join(path, x), indentation+1)
-            else: 
-                print('\t'*indentation + x)
+        if dir[x]:
+            print('    '*indentation + x + '/')
+            rec_print(os.path.join(path, x), indentation+1)
+        else: 
+            print('    '*indentation + x)
 
 
 def main():
