@@ -58,7 +58,7 @@ pro PHP 3 i PHP 7 jsou nainstalovány).
 6. Executable bit souboru `script.php` je zapnut.
 7. Skript může selhat, protože byl napsán pro novější verzy PHP.
 
-Vaše odpověď: **[A3]** 1 2 **[/A3]**
+Vaše odpověď: **[A3]** 1 2 7 **[/A3]**
 
 
 
