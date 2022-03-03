@@ -1,4 +1,10 @@
-# Tasks 01
+# Tasks 01 (grading for bencikb)
+
+| Total                                            |    97 |
+|--------------------------------------------------|------:|
+| 01/factor.py                                     |    50 |
+| 01/Issue                                         |    32 |
+| 01/Issue (selected environment)                  |    15 |
 
 If you see an issue with the grading, please
 [open a **Confidential Issue**](https://gitlab.mff.cuni.cz/teaching/nswi177/2022/common/forum/-/issues/new?issue[confidential]=true&issue[title]=Grading+Tasks+01)
@@ -6,6 +12,36 @@ in the _Forum_.
 
 
 ## 01/factor.py
+
+✅ **Submitted**
+
+✅ **Correct Python script**
+
+✅ **Module-ready**
+
+✅ **input.txt not committed**
+
+✅ **Run with 0**
+
+✅ **Run with 1**
+
+✅ **Run with 2**
+
+✅ **Run with 3**
+
+✅ **Run with 4**
+
+✅ **Run with 24**
+
+✅ **Run with 2022**
+
+✅ **Run with -17**
+
+✅ **Run with xy**
+
+
+
+### General notes (collected from all solutions)
 
 Here are some general notes about your `factor.py` implementation.
 Take them mostly as things to think about: we try to provide them as useful
@@ -55,58 +91,34 @@ you actually overwrote an existing function. Probably not something you want
 to do.
 
 
-
-✅ **01/factor.py - Submitted (0)**
-
-✅ **01/factor.py - Correct Python script (3)**
-
-✅ **01/factor.py - Module-ready (2)**
-
-✅ **01/factor.py - input.txt not committed (-5)**
-
-✅ **01/factor.py - Run with 0 (5)**
-
-✅ **01/factor.py - Run with 1 (5)**
-
-✅ **01/factor.py - Run with 2 (5)**
-
-✅ **01/factor.py - Run with 3 (5)**
-
-✅ **01/factor.py - Run with 4 (5)**
-
-✅ **01/factor.py - Run with 24 (5)**
-
-✅ **01/factor.py - Run with 2022 (5)**
-
-✅ **01/factor.py - Run with -17 (5)**
-
-✅ **01/factor.py - Run with xy (5)**
-
-
-
 ## 01/Issue
 
-✅ **01/issue - Correct issue name (5)**
+✅ **Correct issue name**
 
-✅ **01/issue - Confidential issue (5)**
+✅ **Confidential issue**
 
-✅ **01/issue - Assigned to a teacher (1)**
+✅ **Assigned to a teacher**
 
-✅ **01/issue - Assigned to horkv6am (4)**
+✅ **Assigned to horkv6am**
 
-✅ **01/issue - /etc/os-release link (2)**
+✅ **/etc/os-release link**
 
-❌ **01/issue - /etc/os-release link name correct (3)**
+❌ **/etc/os-release link name correct**
 
-✅ **01/issue - /etc/os-release link correct (5)**
+✅ **/etc/os-release link correct**
 
-✅ **01/issue - /proc/loadavg provided (5)**
+✅ **/proc/loadavg provided**
 
-✅ **01/issue - /proc/loadavg in correct format (5)**
+✅ **/proc/loadavg in correct format**
 
 
 
 ## 01/Issue (selected environment)
+
+**Points**: 15
+
+
+### General notes (collected from all solutions)
 
 To clarify things: we were actually interested in which graphical environment
 you have selected (but we have accepted also reasoning about your distribution
@@ -123,9 +135,5 @@ distribution. You will find most environments on most distributions.
 
 For the computers in IMPAKT, the distribution is Fedora and there are about
 20 environments to choose from (KDE/Plasma, GNOME, Xfce, Openbox, i3 etc.).
-
-
-
-**Points**: 15
 
 
