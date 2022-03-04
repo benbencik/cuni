@@ -18,7 +18,7 @@ def rec_print(path, indentation, only_dirs):
                 dir[thing.name] = False
     items.sort()
 
-    if indentation == 0: path=''
+    # if indentation == 0: path=''
     for x in items:
         if dir[x]:
             print('    '*indentation + x + '/')
@@ -29,12 +29,10 @@ def rec_print(path, indentation, only_dirs):
 
 def main():
     only_dirs = False
-    cwd = ''
+    cwd = os.getcwd() + '/'
     for arg in sys.argv:
         if arg == "-d": only_dirs = True
-        elif arg[-3:] != ".py": cwd = arg
-    if not cwd: cwd = os.getcwd()
-    print(cwd)
+        elif arg[-3:] != ".py": cwd += arg
     rec_print(cwd, 0, only_dirs)
 
 
