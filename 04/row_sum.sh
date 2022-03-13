@@ -1,15 +1,7 @@
 #!/bin/bash
 
-res=()
-sed -e '/^$/,$d' <<EOF
-
-sed -e
-while read -r line;
-do
-    res+=$line;
-done
-
-for r in $res
-do
-    echo $r
-done
+set -ue pipefail
+# tr '|' '0' < inp_row_sum | tr ' ' '+' | tr --squeeze-repeats '+' | bc
+# tr '|' '0' <&0 | tr ' ' '+' | tr --squeeze-repeats '+' | bc
+cat <&0 | xargs tr ' ' '|' | cat
+# tr ' ' '|' < inp_row_sum | cat
