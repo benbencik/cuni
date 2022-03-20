@@ -61,7 +61,7 @@ tj. tomu, co bychom viděli na obrazovce po spuštění programu.
 7. Výstup bude obsahovat `argv[1]: '< ioargs.py'`.
 8. Standardní vstup bude přesměrován z `ioargs.py`.
 
-Vaše odpověď: **[A2]** 2 7 **[/A2]**
+Vaše odpověď: **[A2]** 2 **[/A2]**
 
 
 
