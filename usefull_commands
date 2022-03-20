@@ -1,5 +1,13 @@
 git
-    log
-    diff
+    log - commits
+    diff - differences from last commmit
     status
+
 bash
+    if <-> fi
+    varibles - always strings
+
+python
+    os.getenv() - read environment variables
+    export VAR - variable will be seen by other programs
+    $(( )) - aritmetic operations need to be enclosed 
