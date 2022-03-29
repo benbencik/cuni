@@ -26,4 +26,3 @@ for team in $temp_dir/*; do
     echo "$team_name:$value"
 done
 
-
