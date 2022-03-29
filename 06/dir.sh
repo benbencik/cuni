@@ -1,19 +1,25 @@
-#/bin/bash
+#!/bin/bash
 set -eu
 
 temp_dir="$( mktemp -d )"
 table_info="$temp_dir/info"
 
 list_info(){
-    # if test -d $1 | test -f $1; then
-        if test -d $1; then
-            size="<dir>"
-        elif test -f $1; then
-            size=$(echo | stat --format=%s $1)
-        else
-            size="<special>"
-        fi
+    size=''
+    if test -d $1; then
+        size="<dir>"
+    elif test -f $1; then
+        size=$(echo | stat --format=%s $1)
+    else
+        # if test -b $1; then
+        size="<special>"
+        # fi
+
+    fi
+
+    if [ $size != '' ]; then
         echo > /dev/null "$1 $size" >> $temp_dir/info
+    fi
     # else
     #     echo 2> "$1: no such file or directory"
     # fi 
