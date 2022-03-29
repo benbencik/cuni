@@ -6,6 +6,9 @@ git
 bash
     if <-> fi
     varibles - always strings
+    cut
+    tr
+    echo $? - exit code
 
 python
     os.getenv() - read environment variables
