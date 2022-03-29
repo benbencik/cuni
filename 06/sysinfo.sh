@@ -19,6 +19,10 @@ elif [ "$#" -eq 2 ] & [ $1 == "-s" ]; then
     echo "load=$load"
     echo "kernel=$kernel"
     echo "cpus=$cpus"
+elif [ "$#" -eq 2 ] & [ $1 == "-h" ]; then
+    echo "load=$load"
+    echo "kernel=$kernel"
+    echo "cpus=$cpus"
 else
     while [ $# -gt 0 ]; do
 
