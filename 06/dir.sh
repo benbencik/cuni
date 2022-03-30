@@ -22,16 +22,18 @@ list_info(){
             echo > /dev/null "$1 $size" >> $temp_dir/info
         fi
     else
-        >&2 echo "$1: no such file or directory"
+        >&2 echo "$1: no such file or directory."
     fi 
 }
     
 
 if [ "$#" -eq 0 ]; then
     # itterate over current directory
-    for thing in *; do
-        list_info $thing
-    done
+    if [ "" != "$(ls)" ]; then
+        for thing in *; do
+            list_info $thing
+        done
+    fi
 else
     # itterate over argumetns provided
     for thing in "$@"; do
