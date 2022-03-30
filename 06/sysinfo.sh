@@ -13,7 +13,7 @@ opts_long="load,kernel,cpus,help,script"
 getopt -Q -o "$opts_short" -l "$opts_long" -- "$@" || exit 1
 eval set -- "$( getopt -o "$opts_short" -l "$opts_long" -- "$@" )"
 
-if [ $args_num -eq 1 ]; then
+if [ $args_num -eq 0 ]; then
     l=1; k=1; c=1
 else
     while [ $# -gt 0 ]; do
@@ -24,7 +24,7 @@ else
             -s | --script) 
                 s=1
                 # if there are no other arguments
-                if [ $args_num -eq 2 ]; then
+                if [ $args_num -eq 1 ]; then
                     l=1; k=1; c=1
                 fi
                 ;;
