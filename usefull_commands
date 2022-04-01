@@ -14,3 +14,7 @@ python
     os.getenv() - read environment variables
     export VAR - variable will be seen by other programs
     $(( )) - aritmetic operations need to be enclosed 
+
+ssh
+    ssh-keygen
+    ssh-copy-id  uploading the generated key
