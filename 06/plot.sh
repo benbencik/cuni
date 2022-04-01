@@ -54,3 +54,5 @@ while read len name || [ -n "$len" ]; do
     additional_space="$(( $longest_label - $label_len ))"
     printf "%s (%d) %s| %s\n" "$name" "$len" "$( repeat_string "$additional_space" " " )" "$( repeat_string "$size" "#" )"
 done < "$temp_dir/data"
+
+trap '{ rm -f -- "$temp_dir/data"; }' EXIT
