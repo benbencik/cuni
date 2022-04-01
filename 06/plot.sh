@@ -11,7 +11,6 @@ repeat_string() {
 temp_dir="$( mktemp -d )"
 longest_bar=""
 
-COLUMNS=""
 # if there is no value set it to default
 if [ -z $COLUMNS ]; then
     COLUMNS=80
