@@ -22,4 +22,4 @@ done
 args=`echo $args`
 
 #echo bin/run_tests.sh $args
-bin/run_tests.sh $argss
+bin/run_tests.sh $argssq

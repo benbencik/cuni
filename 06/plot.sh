@@ -10,6 +10,8 @@ repeat_string() {
 
 temp_dir="$( mktemp -d )"
 longest_bar=""
+
+COLUMNS=""
 # if there is no value set it to default
 if [ -z $COLUMNS ]; then
     COLUMNS=80
@@ -53,6 +55,3 @@ while read len name || [ -n "$len" ]; do
     additional_space="$(( $longest_label - $label_len ))"
     printf "%s (%d) %s| %s\n" "$name" "$len" "$( repeat_string "$additional_space" " " )" "$( repeat_string "$size" "#" )"
 done < "$temp_dir/data"
-
-# remove the temp file
-trap '{ rm -f -- "$temp_dir/data"; }' EXIT
