@@ -11,10 +11,12 @@ repeat_string() {
 temp_dir="$( mktemp -d )"
 longest_bar=""
 
+# COLUMNS=20
 # if there is no value set it to default
 if [ -z $COLUMNS ]; then
     COLUMNS=80
 fi 
+
 
 while read len name || [ -n "$len" ]; do
     # if [ "$len" == "#" ]; then
@@ -28,7 +30,7 @@ while read len name || [ -n "$len" ]; do
     if [ "$len" -gt "$longest_bar" ]; then
         longest_bar="$len";
     fi
-done
+done < $1
 
 
 longest_label="$(wc -L "$temp_dir/data" | cut -d " " -f 1)"
