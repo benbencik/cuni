@@ -9,32 +9,31 @@ repeat_string() {
 }
 
 temp_dir="$( mktemp -d )"
-screen_width=0
 longest_bar=""
+# if there is no value set it to default
+if [ -z $COLUMNS ]; then
+    COLUMNS=80
+fi 
 
 while read len name || [ -n "$len" ]; do
+    # if [ "$len" == "#" ]; then
+    #     screen_width="$(echo $name | cut -d "=" -f 2)"
+    # else
+
     # load values into file
-    if [ "$len" == "#" ]; then
-        screen_width="$(echo $name | cut -d "=" -f 2)"
-    else
-        echo "$len $name" >> $temp_dir/data
-        # set the maximum
-        [ -z "$longest_bar" ] && longest_bar="$len"
-        if [ "$len" -gt "$longest_bar" ]; then
-            longest_bar="$len";
-        fi
+    echo "$len $name" >> $temp_dir/data
+    # set the maximum
+    [ -z "$longest_bar" ] && longest_bar="$len"
+    if [ "$len" -gt "$longest_bar" ]; then
+        longest_bar="$len";
     fi
 done
 
-# if there is no value set it to default
-if [ $screen_width -eq 0 ]; then
-    screen_width=80
-fi 
 
 longest_label="$(wc -L "$temp_dir/data" | cut -d " " -f 1)"
 longest_label="$(( longest_label + 5))"
 # actual space dedicated for the bar
-space_for_bar="$(( "$screen_width" - "$longest_label" ))"
+space_for_bar="$(( "$COLUMNS" - "$longest_label" ))"
 
 # scaling of the bar
 if [ "$longest_bar" -gt "$space_for_bar" ]; then
@@ -55,4 +54,5 @@ while read len name || [ -n "$len" ]; do
     printf "%s (%d) %s| %s\n" "$name" "$len" "$( repeat_string "$additional_space" " " )" "$( repeat_string "$size" "#" )"
 done < "$temp_dir/data"
 
+# remove the temp file
 trap '{ rm -f -- "$temp_dir/data"; }' EXIT
