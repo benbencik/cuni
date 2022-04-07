@@ -4,7 +4,12 @@ set -ueo pipefail
 temp_dir="$( mktemp -d )"
 machine=''
 max_attempts=0
-for ip in $(grep -E "404" | cut -d ' ' -f 1); do
+
+
+while read -r ip; do
+# for ip in $(grep -E "404" | cut -d ' ' -f 1); do
+    # ip="$(grep -E "404" | cut -d ' ' -f 1)"
+    # echo $ip
     if test -f "$temp_dir/$ip"; then
         current="$(cat "$temp_dir/$ip")"
         current=$((current + 1))
@@ -17,6 +22,6 @@ for ip in $(grep -E "404" | cut -d ' ' -f 1); do
         max_attempts=$(cat "$temp_dir/$ip")
         machine=$ip
     fi
-done
+done < <(grep -E "404" | cut -d ' ' -f 1)
 
 echo "$machine"
