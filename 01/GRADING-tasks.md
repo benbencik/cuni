@@ -1,4 +1,4 @@
-# Tasks 01 (grading for bencikb)
+# Tasks 01 (student bencikb)
 
 | Total                                            |    97 |
 |--------------------------------------------------|------:|
@@ -11,33 +11,41 @@ If you see an issue with the grading, please
 in the _Forum_.
 
 
+For assignments with automated tests you will see a TAP-style result output
+that you are familiar with from your pipeline tests in GitLab.
+
+The tests also contains information about points assigned (or subtracted)
+for that particular test. There are also tests with _zero points_ that
+are informative only (kind of like warnings from your compiler: you
+should pay attention but they are not crucial).
+
 ## 01/factor.py
 
-✅ **Submitted**
+✅ **Submitted** (passed, informative only)
 
-✅ **Correct Python script**
+✅ **Correct Python script** (passed, +3 points)
 
-✅ **Module-ready**
+✅ **Module-ready** (passed, +2 points)
 
-✅ **input.txt not committed**
+✅ **input.txt not committed** (passed, +0 points)
 
-✅ **Run with 0**
+✅ **Run with 0** (passed, +5 points)
 
-✅ **Run with 1**
+✅ **Run with 1** (passed, +5 points)
 
-✅ **Run with 2**
+✅ **Run with 2** (passed, +5 points)
 
-✅ **Run with 3**
+✅ **Run with 3** (passed, +5 points)
 
-✅ **Run with 4**
+✅ **Run with 4** (passed, +5 points)
 
-✅ **Run with 24**
+✅ **Run with 24** (passed, +5 points)
 
-✅ **Run with 2022**
+✅ **Run with 2022** (passed, +5 points)
 
-✅ **Run with -17**
+✅ **Run with -17** (passed, +5 points)
 
-✅ **Run with xy**
+✅ **Run with xy** (passed, +5 points)
 
 
 
@@ -93,23 +101,23 @@ to do.
 
 ## 01/Issue
 
-✅ **Correct issue name**
+✅ **Correct issue name** (passed, +5 points)
 
-✅ **Confidential issue**
+✅ **Confidential issue** (passed, +5 points)
 
-✅ **Assigned to a teacher**
+✅ **Assigned to a teacher** (passed, +1 points)
 
-✅ **Assigned to horkv6am**
+✅ **Assigned to horkv6am** (passed, +4 points)
 
-✅ **/etc/os-release link**
+✅ **/etc/os-release link** (passed, +2 points)
 
-❌ **/etc/os-release link name correct**
+❌ **/etc/os-release link name correct** (failed, worth 3 points)
 
-✅ **/etc/os-release link correct**
+✅ **/etc/os-release link correct** (passed, +5 points)
 
-✅ **/proc/loadavg provided**
+✅ **/proc/loadavg provided** (passed, +5 points)
 
-✅ **/proc/loadavg in correct format**
+✅ **/proc/loadavg in correct format** (passed, +5 points)
 
 
 
