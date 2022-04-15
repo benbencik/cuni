@@ -12,7 +12,7 @@ on_exit() {
 trap "on_exit" INT
 
 
-for num in {10..1}; do
-    echo $num
+for ((i=$1; i > 0; i--)); do
+    echo "$i"
     sleep 1
 done
