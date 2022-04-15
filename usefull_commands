@@ -16,5 +16,5 @@ python
     $(( )) - aritmetic operations need to be enclosed 
 
 ssh
-    ssh-keygen
-    ssh-copy-id  uploading the generated key
+    ssh-keygen - generate both public and private keys
+    ssh-copy-id - uploading the generated key
