@@ -56,7 +56,7 @@ Více odpovědí je možných.
 5. Protože počet souborů v takovém adresáři je mnohem větší, než co
    Git dovolí (čili by stejně nebylo možné je všechny commitnout).
 
-Vaše odpověď: **[A3]** 1,4 **[/A3]**
+Vaše odpověď: **[A3]** 1,2,4 **[/A3]**
 
 
 
