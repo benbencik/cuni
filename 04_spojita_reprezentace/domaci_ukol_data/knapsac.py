@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import numpy as np
 import random
 import copy
@@ -25,7 +27,7 @@ def random_population(population_size, individual_size):
     return population
 
 
-def crossover_mean(population, cross_prob=0.9):
+def crossover_mean(population, cross_prob=0.75):
     # classic crossover with randomly chosen point
     new_population = []
     for j in range(0,len(population)//2):
@@ -43,7 +45,7 @@ def crossover_mean(population, cross_prob=0.9):
     return new_population
 
 
-def mutation_switch(population,individual_mutation_prob=0.2,value_mutation_prob=0.3):
+def mutation_switch(population,individual_mutation_prob=1/3,value_mutation_prob=1/(1000/6)):
     # perform classic mutation by switching bits
     new_population = []
     for j in range(len(population)):
@@ -73,22 +75,22 @@ def selection(population,fitness_value, M):
 def evolution(population_size, individual_size, max_generations):
     max_fitness, population = [], random_population(population_size,individual_size)
     for i in range(max_generations):
-        if i % 100 == 0: print(i, "epochs have passes")
         fitness_value = list(map(fitness, population))
         max_fitness.append(max(fitness_value))
-        parents = selection(population, fitness_value, 2)
+        parents = selection(population, fitness_value, 20)
         children = crossover_mean(parents)
         mutated_children = mutation_switch(children)
         population = mutated_children
+        if i % 10 == 0: print(i, max_fitness[-1])
 
     max_fitness.append(max(list(map(fitness, population))))
-    best_individual = population[np.argmax(fitness_value)]
-    return best_individual, population, max_fitness
+    # best_individual = population[np.argmax(fitness_value)]
+    return max_fitness
 
 
 
-input_file = "debugging_data_20.txt"
-# input_file = "input_data_100.txt"
+# input_file = "debugging_data_20.txt"
+input_file = "input_data_100.txt"
 
 items = []
 with open(input_file, 'r') as inp:
@@ -98,14 +100,12 @@ with open(input_file, 'r') as inp:
         cost, weight = [int(i) for i in inp.readline().split(' ')]
         items.append([cost, weight])
 
-best, population, max_fitness = evolution(population_size=150, individual_size=N, max_generations=1000)
-print("-"*50)
+max_fitness = evolution(population_size=N*4, individual_size=N, max_generations=250)
 print("done")
-print('best fitness: ', fitness(best))
-print('best individual: ', best)
-# toto tu robi kraviny
+print("-"*30)
+print('best fitness: ', max(max_fitness))
 
 plt.plot(max_fitness)
 plt.ylabel('Fitness')
-plt.xlabel('Generace')
+plt.xlabel('Generations')
 plt.show()
