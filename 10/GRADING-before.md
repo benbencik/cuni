@@ -1,11 +1,11 @@
 # Before class quiz for 10 (student bencikb)
 
-| Total                                            |    92 |
+| Total                                            |    96 |
 |--------------------------------------------------|------:|
 | Q1 (previous lab)                                |    25 |
 | Q2 (disk image creation)                         |    25 |
 | Q3 (signals in Python)                           |    21 |
-| Q4 (disk mounting)                               |    21 |
+| Q4 (disk mounting)                               |    25 |
 
 If you see an issue with the grading, please
 [open a **Confidential Issue**](https://gitlab.mff.cuni.cz/teaching/nswi177/2022/common/forum/-/issues/new?issue[confidential]=true&issue[title]=Grading+Before+class+quiz+for+10)
@@ -96,7 +96,7 @@ innocent :-)
 
 ## Q4 (disk mounting)
 
-**Points**: 21
+**Points**: 25
 
 **Expected:** 1, 4, 6 (answered 4, 6)
 
