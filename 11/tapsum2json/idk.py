@@ -1,10 +1,9 @@
-import json
 import sys
 import json
-import tap
+import tap.parser
 
 args = sys.argv
-loader = tap.loader.Loader()
+# loader = tap.loader.Loader()
 parser = tap.parser.Parser()
 
 for file in args[1:]:

@@ -8,7 +8,7 @@ alias deactivate 'test $?_OLD_VIRTUAL_PATH != 0 && setenv PATH "$_OLD_VIRTUAL_PA
 # Unset irrelevant variables.
 deactivate nondestructive
 
-setenv VIRTUAL_ENV "/home/ben/Documents/code/cuni/2sem/linux/11/idk_venv"
+setenv VIRTUAL_ENV "/home/ben/Documents/code/cuni/2sem/linux/11/tapsum2json"
 
 set _OLD_VIRTUAL_PATH="$PATH"
 setenv PATH "$VIRTUAL_ENV/bin:$PATH"
@@ -17,8 +17,8 @@ setenv PATH "$VIRTUAL_ENV/bin:$PATH"
 set _OLD_VIRTUAL_PROMPT="$prompt"
 
 if (! "$?VIRTUAL_ENV_DISABLE_PROMPT") then
-    set prompt = "(idk_venv) $prompt"
-    setenv VIRTUAL_ENV_PROMPT "(idk_venv) "
+    set prompt = "(tapsum2json) $prompt"
+    setenv VIRTUAL_ENV_PROMPT "(tapsum2json) "
 endif
 
 alias pydoc python -m pydoc
