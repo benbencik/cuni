@@ -26,7 +26,7 @@ def main():
                     expected_tests = line.expected_tests
                 elif (line.category == "bail"):
                     res["total"] = expected_tests
-                    res["skipped"] = expected_tests - res["pass"] - res["failed"] 
+                    res["skipped"] = expected_tests - res["passed"] - res["failed"] 
         out["summary"].append(res)
     print(json.dumps(out, indent=True))
 
