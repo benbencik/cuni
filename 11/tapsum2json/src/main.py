@@ -11,7 +11,6 @@ def main():
     out = {"summary": []}
 
     for f in files[1:]:
-        print(f)
         res = {"filename": f, "total": 0, "passed": 0, "skipped": 0, "failed": 0}
         if (os.path.exists(f)):
             inp = parser.parse_file(f)
@@ -26,4 +25,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
