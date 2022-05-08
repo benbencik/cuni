@@ -1,0 +1,30 @@
+
+Running with gitlab-runner 14.10.0 (c6bb62f6)
+  on gitlab.mff docker Mtt-jvRo
+Preparing the "docker" executor 00:02
+Using Docker executor with image registry.gitlab.com/mffd3s/nswi177/student:latest ...
+Pulling docker image registry.gitlab.com/mffd3s/nswi177/student:latest ...
+Using docker image sha256:53bebeca2d4af49203a9ae30d391c38ec3ba62d27473f9922d97684cf42c6bd3 for registry.gitlab.com/mffd3s/nswi177/student:latest with digest registry.gitlab.com/mffd3s/nswi177/student@sha256:fa4e8466848c1a97b90e9db29776aac3c8115ad787eac3f2c134b6759e304e09 ...
+Preparing environment 00:01
+Running on runner-mtt-jvro-project-5767-concurrent-0 via gitlab-runner...
+Getting source from Git repository 00:02
+Fetching changes with git depth set to 20...
+Initialized empty Git repository in /builds/teaching/nswi177/2022/student-bencikb/.git/
+Created fresh repository.
+Checking out 6a4e979d as master...
+Skipping Git submodules setup
+Executing "step_script" stage of the job script 00:02
+Using docker image sha256:53bebeca2d4af49203a9ae30d391c38ec3ba62d27473f9922d97684cf42c6bd3 for registry.gitlab.com/mffd3s/nswi177/student:latest with digest registry.gitlab.com/mffd3s/nswi177/student@sha256:fa4e8466848c1a97b90e9db29776aac3c8115ad787eac3f2c134b6759e304e09 ...
+$ ./bin/run_tests.sh quizzes/12
+1..9
+ok 1 12/before.md - Submitted
+ok 2 12/before.md - A1 answered
+ok 3 12/before.md - A1 in correct format
+ok 4 12/before.md - A2 answered
+ok 5 12/before.md - A2 in correct format
+ok 6 12/before.md - A3 answered
+ok 7 12/before.md - A3 in correct format
+ok 8 12/before.md - A4 answered
+ok 9 12/before.md - A4 in correct format
+Cleaning up project directory and file based variables 00:01
+Job succeeded
