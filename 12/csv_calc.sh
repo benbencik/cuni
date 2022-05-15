@@ -32,7 +32,7 @@ read -r headers
 new_col_name="$( echo "$expression" | cut '-d=' -f 1 )"
 new_col_expression="$( echo "$expression" | cut '-d=' -f 2 )"
 
-exit_code=0
+# exit_code=0
 echo "$headers,$new_col_name"
 while read -r csv_line; do
     col_value="$( \
@@ -43,9 +43,9 @@ while read -r csv_line; do
     )"
     if [ "$col_value" = "-" ]; then
         echo "Computation failed at $csv_line." >&2
-        exit_code=1
+        # exit_code=1
         continue
     fi
     echo "$csv_line,$col_value"
 done
-exit $exit_code
+# exit $exit_code
