@@ -1,9 +1,9 @@
 __pycache__
 .vscode
 .ipynb_checkpoints
-todo/*
 *.docx
-solution.ipynb
+solution*
 01_uvod/tmp_file.txt
+04_spojita_reprezentace/evaluate_students_knapsack.py
 08_konvoluce/logs2/*
 09_neuroevoluce/results/*
