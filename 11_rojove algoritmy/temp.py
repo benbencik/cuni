@@ -78,7 +78,16 @@ def ant_solver(vertices, distance, ants=10, max_iterations=5, alpha=1, beta=3, Q
 
 # ---------------------------------------------------------------------------------------------
 
+
+# test = "data_32.xml"
+# test = "data_72.xml"
+test = "data_422.xml"
+tree = ET.parse(f"aco_salesman/data/{test}")
+root = tree.getroot()
+
+cat = {"info": 0, "network": 1, "fleet": 2, "requests": 3}  # categories
 Vertex = namedtuple('Vertex', ['name', 'x', 'y'])
+Request = namedtuple('Request', ['name', 'destination', 'size'])
 
 vertices = []
 with open('cities.csv') as cities_file:
