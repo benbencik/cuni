@@ -2,10 +2,10 @@ COURSES = NAIL062 NDBI025 NDMI002 NDMI011 NJAZ070 NJAZ072 NJAZ074 NJAZ090 NJAZ09
 
 
 %.html : %.md
-	pandoc --template template.html -B _menu.html "src/${page}.md" "$@" > "public_html/${page}.html"
+	@pandoc --template template.html -B _menu.html "src/$(COURSES).md" > "public_html/$(COURSES).html"
 
 index.html : _menu.md
-	@echo "nieco" > src/index.html
+	@echo "nieco" > public_html/index.html
 
 _menu.md : _menu.md
 	@echo "nieco" > _menu.md
