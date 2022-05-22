@@ -4,11 +4,14 @@ COURSES = NAIL062 NDBI025 NDMI002 NDMI011 NJAZ070 NJAZ072 NJAZ074 NJAZ090 NJAZ09
 %.html : %.md
 	pandoc --template template.html -B _menu.html "src/${page}.md" "$@" > "public_html/${page}.html"
 
+index.html : _menu.md
+	@echo "nieco" > src/index.html
+
 _menu.md : _menu.md
-	@echo "nieco"
+	@echo "nieco" > _menu.md
 
 _menu.html: _menu.htmls
-	@echo "nieco2"
+	@echo "nieco2" > _menu.html
 
 clean:
 	@/bin/rm -f 'src/*.h'
