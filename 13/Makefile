@@ -12,7 +12,7 @@ public_html/index.html:src/index.md
 	pandoc -o index.html index.md
 
 public_html/%.html:src/%.md src/%.meta template.html
-	pandoc --template template.html -B _menu.html --metadata-file src/$*.meta -o $@ $< 
+	pandoc --template template.html -B _menu.html -o $@ $< 
 
 
 index.html:_menu.md
