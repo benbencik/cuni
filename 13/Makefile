@@ -8,8 +8,13 @@ public_html/main.css : main.css
 
 .PHONY : clean debug
 
+
 public_html/index.html : src/index.md
 	pandoc -o index.html index.md
+
+public_html/%.html: src/%.md src/%.meta template.html
+	pandoc -B _menu.html --template=template.html --metadata-file src/$*.meta -o $@ $< 
+
 
 index.html : _menu.md
 	echo "nieco" > public_html/index.html
