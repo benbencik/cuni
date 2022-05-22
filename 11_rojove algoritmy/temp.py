@@ -32,6 +32,7 @@ def update_pheromone(pheromones_array, solutions, fits, Q=100, rho=0.6):
             pheromone_update[x][y] += Q/fit
         pheromone_update[solution[-1]][solution[0]] += Q/fit
     
+    1
     return (1-rho)*pheromones_array + pheromone_update
 
 
@@ -57,7 +58,7 @@ def generate_solutions(vertices, pheromones, distance, N, alpha=1, beta=3):
         yield solution
 
 
-def ant_solver(vertices, distance, ants=10, max_iterations=5, alpha=1, beta=3, Q=100, rho=0.8):
+def ant_solver(vertices, vehicle_capacity, warehouse,distance, ants=10, max_iterations=5, alpha=1, beta=3, Q=100, rho=0.8):
     pheromones = initialize_pheromone(len(vertices))
     best_solution = None
     best_fitness = float('inf')
@@ -72,33 +73,54 @@ def ant_solver(vertices, distance, ants=10, max_iterations=5, alpha=1, beta=3, Q
                 best_fitness = f
                 best_solution = s
         
-        print(f'{i:4}, {np.min(fits):.4f}, {np.mean(fits):.4f}, {np.max(fits):.4f}')
+        # print(f'{i:4}, {np.min(fits):.4f}, {np.mean(fits):.4f}, {np.max(fits):.4f}')
     return best_solution, pheromones
 
 
 # ---------------------------------------------------------------------------------------------
 
 
-# test = "data_32.xml"
+test = "data_32.xml"
 # test = "data_72.xml"
-test = "data_422.xml"
+# test = "data_422.xml"
 tree = ET.parse(f"aco_salesman/data/{test}")
 root = tree.getroot()
 
 cat = {"info": 0, "network": 1, "fleet": 2, "requests": 3}  # categories
-Vertex = namedtuple('Vertex', ['name', 'x', 'y'])
-Request = namedtuple('Request', ['name', 'destination', 'size'])
+Vertex = namedtuple('Vertex', ['name', 'x', 'y', 'size'])
 
+
+# fleet info
+vehicle_capacity = -1
+for fleet in root[cat["fleet"]]: vehicle_capacity = float(fleet[2].text)
+
+# graph
+coords = {}
+for nodes in root[cat["network"]]:
+    for node in nodes:
+        if node.attrib["type"] == "0": warehouse = int(node.attrib["id"])
+        coords[int(node.attrib['id'])] = [float(node[0].text), float(node[1].text), node.attrib["type"]]
+
+# requests
 vertices = []
-with open('cities.csv') as cities_file:
-    csv_reader = csv.reader(cities_file, delimiter=',')
-    for row in csv_reader:
-        vertices.append(Vertex(row[0], float(row[2]), float(row[1])))
+warehouse = -1
+for req in root[cat["requests"]]:
+    id = int(req.attrib["id"])
+    if coords[id][2] == 0: warehouse = len(vertices)
+    vertices.append(Vertex(id, coords[id][0], coords[id][1], float(req[0].text)))
+
+
+
+# vertices = []
+# with open('cities.csv') as cities_file:
+#     csv_reader = csv.reader(cities_file, delimiter=',')
+#     for row in csv_reader:
+#         vertices.append(Vertex(row[0], float(row[2]), float(row[1])))
 
 pprint.pprint(vertices)
 
 
-best_solution, pheromones = ant_solver(vertices, distance)
+best_solution, pheromones = ant_solver(vertices, vehicle_capacity, warehouse, distance)
 
 
 lines = []
@@ -123,7 +145,7 @@ solution = best_solution
 print('Fitness: ', fitness(vertices, distance, solution))
 
 solution_vertices = [vertices[i] for i in solution]
-pprint.pprint(solution_vertices)
+# pprint.pprint(solution_vertices)
 
 solution_lines = []
 for i, j in zip(solution, solution[1:]):
