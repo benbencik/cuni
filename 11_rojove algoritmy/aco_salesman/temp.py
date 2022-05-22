@@ -69,7 +69,7 @@ def generate_solutions(vertices, vehicle_capacity, warehouse_id, pheromones, dis
         yield solution
 
 
-def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=10, max_iterations=1000, alpha=1, beta=3, Q=100, rho=0.8):
+def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=10, max_iterations=20, alpha=1, beta=3, Q=100, rho=0.8):
     pheromones = initialize_pheromone(len(vertices))
     best_solution = None
     best_fitness = float('inf')
@@ -107,18 +107,20 @@ for fleet in root[cat["fleet"]]: vehicle_capacity = float(fleet[2].text)
 
 # graph
 coords = {}
+vertices = []
+warehouse_id = 0
 for nodes in root[cat["network"]]:
     for node in nodes:
+        if int(node.attrib["type"]) == 0: vertices.append(Vertex(int(node.attrib['id']), float(node[0].text), float(node[1].text), 0))
         coords[int(node.attrib['id'])] = [float(node[0].text), float(node[1].text), int(node.attrib["type"])]
 
 # requests
-vertices = []
-warehouse_id = -1
 for req in root[cat["requests"]]:
-    id = int(req.attrib["id"])
-    if coords[id][2] == 0: warehouse_id = len(vertices)
+    id = int(req.attrib["node"])
+    print(coords[id])
+    # if coords[id][2] == 0: warehouse_id = len(vertices)
     vertices.append(Vertex(id, coords[id][0], coords[id][1], float(req[0].text)))
-
+# print(vertices)
 
 # vertices = []
 # with open('cities.csv') as cities_file:
@@ -127,7 +129,7 @@ for req in root[cat["requests"]]:
 #         vertices.append(Vertex(row[0], float(row[2]), float(row[1])))
 
 # pprint.pprint(vertices)
-
+print(warehouse_id)
 
 best_solution, pheromones = ant_solver(vertices, vehicle_capacity, warehouse_id, distance)
 
