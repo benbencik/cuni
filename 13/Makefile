@@ -6,14 +6,13 @@ all : public_html/main.css index.html _menu.md _menu.html
 public_html/main.css : main.css
 	cp main.css public_html/main.css
 
-.PHONY : clean debug
 
 
 public_html/index.html : src/index.md
 	pandoc -o index.html index.md
 
 public_html/%.html: src/%.md src/%.meta template.html
-	pandoc -B _menu.html --template=template.html --metadata-file src/$*.meta -o $@ $< 
+	pandoc --template template.html -B _menu.html --metadata-file src/$*.meta -o $@ $< 
 
 
 index.html : _menu.md
