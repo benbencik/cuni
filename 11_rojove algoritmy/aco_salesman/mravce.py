@@ -1,11 +1,10 @@
-import re
 import xml.etree.ElementTree as ET
 from collections import namedtuple
 import numpy as np
 import functools
 import pprint
 import math
-import csv
+
 
 from matplotlib import collections as mc
 import matplotlib.pyplot as plt
@@ -86,7 +85,7 @@ def format_solution(solutions):
     return path, vehicles
 
 
-def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=10, max_iterations=100, alpha=1, beta=3, Q=100, rho=0.8, vehicle_penalization=10):
+def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=10, max_iterations=2, alpha=1, beta=3, Q=100, rho=0.8, vehicle_penalization=10):
     pheromones = initialize_pheromone(len(vertices))
     best_solution = None
     best_fitness = float('inf')
@@ -104,17 +103,19 @@ def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=10, max_
         
         pheromones = update_pheromone(pheromones, path, fits, Q=Q, rho=rho)
         
-        for s, f in zip(path, fits):
+        for s, f, d, v in zip(path, fits, dist, vehicles):
             if f < best_fitness:
                 best_fitness = f
                 best_solution = s
+                out_dist = d
+                out_vehicles = v 
         
         print(f'{i:4}, {np.min(fits):.4f}, {np.mean(fits):.4f}, {np.max(fits):.4f}')
-    return best_solution, pheromones
+    return best_solution, pheromones, out_dist, out_vehicles
 
 
-# ---------------------------------------------------------------------------------------------
 
+# ---PARSER----------------------------------------------------------------------
 
 test = "data_32.xml"
 # test = "data_72.xml"
@@ -146,9 +147,11 @@ for req in root[cat["requests"]]:
     vertices.append(Vertex(id, coords[id][0], coords[id][1], float(req[0].text)))
 
 
+best_solution, pheromones, dist, vehicles = ant_solver(vertices, vehicle_capacity, warehouse_id, distance)
 
-best_solution, pheromones = ant_solver(vertices, vehicle_capacity, warehouse_id, distance)
 
+
+# ---KRESLIČ----------------------------------------------------------------------
 
 lines = []
 colors = []
@@ -166,15 +169,13 @@ ax.autoscale()
 
 solution = best_solution
 
-# tady muzeme zkouset vliv jednotlivych parametru na vygenerovane reseni
-# solution = list(generate_solutions(vertices, pheromones, distance, N=1, alpha=3, beta=1))[0]
+print('Distance: ', dist)
+print('Vehicles used: ', vehicles)
 
-# print('Fitness: ', fitness(vertices, distance, solution))
 
 solution_vertices = [vertices[i] for i in solution]
-# pprint.pprint(solution_vertices)
-
 solution_lines = []
+
 for i, j in zip(solution, solution[1:]):
     solution_lines.append([(vertices[i].x, vertices[i].y), (vertices[j].x, vertices[j].y)])
 solution_lines.append([(vertices[solution[-1]].x, vertices[solution[-1]].y), (vertices[solution[0]].x, vertices[solution[0]].y)])
