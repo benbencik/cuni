@@ -48,7 +48,8 @@ def generate_solutions(vertices, vehicle_capacity, warehouse_id, pheromones, dis
         available = list(range(pheromones_shape))
         
         solution = [warehouse_id]
-        vehicle_load = 0 
+        vehicle_load = 0
+        vehicle_quanity = 1
         path = [warehouse_id]
         
         available.remove(solution[0])
@@ -64,9 +65,31 @@ def generate_solutions(vertices, vehicle_capacity, warehouse_id, pheromones, dis
             else:
                 solution += path[1:]
                 vehicle_load = 0
+                vehicle_quanity += 1
                 path = [warehouse_id]
-        if len(path) > 1: solution += path[1:]
+        
+        if len(path) > 1: 
+            solution += path[1:]
+            vehicle_quanity += 1
+        solution.append(vehicle_quanity)
         yield solution
+
+
+def format_solution(solutions):
+    path, vehicles = [], []
+    for s in solutions:
+        v = s.pop()
+        vehicles.append(v)
+        path.append(s)
+    return path, vehicles
+
+
+def format_fitness(fits):
+    distance, fitness = [], []
+    for f in fits:
+        distance.append(f[0])
+        fitness.append(f[1])
+    return fitness, distance
 
 
 def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=10, max_iterations=20, alpha=1, beta=3, Q=100, rho=0.8):
@@ -75,11 +98,15 @@ def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=10, max_
     best_fitness = float('inf')
     
     for i in range(max_iterations):
+        # last number in solutions contains number of vehicles used
         solutions = list(generate_solutions(vertices, vehicle_capacity, warehouse_id, pheromones, distance, ants, alpha=alpha, beta=beta))
-        fits = list(map(lambda x: fitness(vertices, distance, x), solutions))
-        pheromones = update_pheromone(pheromones, solutions, fits, Q=Q, rho=rho)
+        path, vehicles = format_solution(solutions)
+
+        fits = list(map(lambda x: fitness(vertices, distance, x), path))
+        # fitt, distance = format_fitness(fits)
+        pheromones = update_pheromone(pheromones, path, fits, Q=Q, rho=rho)
         
-        for s, f in zip(solutions, fits):
+        for s, f in zip(path, fits):
             if f < best_fitness:
                 best_fitness = f
                 best_solution = s
@@ -91,9 +118,9 @@ def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=10, max_
 # ---------------------------------------------------------------------------------------------
 
 
-# test = "data_32.xml"
+test = "data_32.xml"
 # test = "data_72.xml"
-test = "data_422.xml"
+# test = "data_422.xml"
 tree = ET.parse(f"data/{test}")
 root = tree.getroot()
 
@@ -117,10 +144,8 @@ for nodes in root[cat["network"]]:
 # requests
 for req in root[cat["requests"]]:
     id = int(req.attrib["node"])
-    print(coords[id])
     # if coords[id][2] == 0: warehouse_id = len(vertices)
     vertices.append(Vertex(id, coords[id][0], coords[id][1], float(req[0].text)))
-# print(vertices)
 
 # vertices = []
 # with open('cities.csv') as cities_file:
@@ -128,8 +153,6 @@ for req in root[cat["requests"]]:
 #     for row in csv_reader:
 #         vertices.append(Vertex(row[0], float(row[2]), float(row[1])))
 
-# pprint.pprint(vertices)
-print(warehouse_id)
 
 best_solution, pheromones = ant_solver(vertices, vehicle_capacity, warehouse_id, distance)
 
