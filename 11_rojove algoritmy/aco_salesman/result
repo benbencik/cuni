@@ -1,11 +1,16 @@
 DATASET: data_32.xml
-    best distance:
-    vehicles used:
+    best distance: 736.5217270113055
+    vehicles used: 17
+    time: 4m
+
 
 DATASET: data_72.xml
-    best distance:
-    vehicles used:
+    best distance: 219.16201998945814
+    vehicles used: 2
+    time: 10m
+
 
 DATASET: data_422.xml
     best distance:
     vehicles used:
+    time:

@@ -85,7 +85,7 @@ def format_solution(solutions):
     return path, vehicles
 
 
-def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=10, max_iterations=2, alpha=1, beta=3, Q=100, rho=0.8, vehicle_penalization=10):
+def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=15, max_iterations=2500, alpha=1, beta=3, Q=100, rho=0.8, vehicle_penalization=25):
     pheromones = initialize_pheromone(len(vertices))
     best_solution = None
     best_fitness = float('inf')
@@ -117,9 +117,9 @@ def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=10, max_
 
 # ---PARSER----------------------------------------------------------------------
 
-test = "data_32.xml"
+# test = "data_32.xml"
 # test = "data_72.xml"
-# test = "data_422.xml"
+test = "data_422.xml"
 tree = ET.parse(f"data/{test}")
 root = tree.getroot()
 
