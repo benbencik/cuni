@@ -85,7 +85,7 @@ def format_solution(solutions):
     return path, vehicles
 
 
-def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=15, max_iterations=2500, alpha=1, beta=3, Q=100, rho=0.8, vehicle_penalization=25):
+def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=15, max_iterations=500, alpha=1, beta=3, Q=100, rho=0.5, vehicle_penalization=25):
     pheromones = initialize_pheromone(len(vertices))
     best_solution = None
     best_fitness = float('inf')
@@ -110,7 +110,7 @@ def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=15, max_
                 out_dist = d
                 out_vehicles = v 
         
-        print(f'{i:4}, {np.min(fits):.4f}, {np.mean(fits):.4f}, {np.max(fits):.4f}')
+        print(f'{i:4}, {np.min(fits):.4f}, {np.mean(fits):.4f}, {np.min(vehicles):.4f}')
     return best_solution, pheromones, out_dist, out_vehicles
 
 
