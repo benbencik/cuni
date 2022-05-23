@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 def distance(v1, v2):
     return math.sqrt((v1.x - v2.x)**2+(v1.y - v2.y)**2)
 
+
 def fitness(vertices, distance, solution):
     solution_distance = 0
     for x, y in zip(solution, solution[1:]):
@@ -22,8 +23,10 @@ def fitness(vertices, distance, solution):
     solution_distance += distance(vertices[solution[-1]], vertices[solution[0]])
     return solution_distance
 
+
 def initialize_pheromone(N):
     return 0.01*np.ones(shape=(N,N))
+
 
 def update_pheromone(pheromones_array, solutions, fits, Q=100, rho=0.6):
     pheromone_update = np.zeros(shape=pheromones_array.shape)
@@ -35,7 +38,6 @@ def update_pheromone(pheromones_array, solutions, fits, Q=100, rho=0.6):
 
 
 def generate_solutions(vertices, vehicle_capacity, warehouse_id, pheromones, distance, N, alpha=1, beta=3):
-    
     # pravdepodobnost vyberu dalsiho mesta
     def compute_prob(v1, v2):
         dist = 1/distance(vertices[v1], vertices[v2])
@@ -84,15 +86,7 @@ def format_solution(solutions):
     return path, vehicles
 
 
-def format_fitness(fits):
-    distance, fitness = [], []
-    for f in fits:
-        distance.append(f[0])
-        fitness.append(f[1])
-    return fitness, distance
-
-
-def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=10, max_iterations=20, alpha=1, beta=3, Q=100, rho=0.8):
+def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=10, max_iterations=100, alpha=1, beta=3, Q=100, rho=0.8, vehicle_penalization=10):
     pheromones = initialize_pheromone(len(vertices))
     best_solution = None
     best_fitness = float('inf')
@@ -102,8 +96,12 @@ def ant_solver(vertices, vehicle_capacity, warehouse_id, distance, ants=10, max_
         solutions = list(generate_solutions(vertices, vehicle_capacity, warehouse_id, pheromones, distance, ants, alpha=alpha, beta=beta))
         path, vehicles = format_solution(solutions)
 
-        fits = list(map(lambda x: fitness(vertices, distance, x), path))
-        # fitt, distance = format_fitness(fits)
+        dist = list(map(lambda x: fitness(vertices, distance, x), path))
+        fits = []
+        for idx, d in enumerate(dist):
+            fits.append(d + vehicle_penalization*vehicles[idx])
+
+        
         pheromones = update_pheromone(pheromones, path, fits, Q=Q, rho=rho)
         
         for s, f in zip(path, fits):
@@ -147,11 +145,6 @@ for req in root[cat["requests"]]:
     # if coords[id][2] == 0: warehouse_id = len(vertices)
     vertices.append(Vertex(id, coords[id][0], coords[id][1], float(req[0].text)))
 
-# vertices = []
-# with open('cities.csv') as cities_file:
-#     csv_reader = csv.reader(cities_file, delimiter=',')
-#     for row in csv_reader:
-#         vertices.append(Vertex(row[0], float(row[2]), float(row[1])))
 
 
 best_solution, pheromones = ant_solver(vertices, vehicle_capacity, warehouse_id, distance)
@@ -176,7 +169,7 @@ solution = best_solution
 # tady muzeme zkouset vliv jednotlivych parametru na vygenerovane reseni
 # solution = list(generate_solutions(vertices, pheromones, distance, N=1, alpha=3, beta=1))[0]
 
-print('Fitness: ', fitness(vertices, distance, solution))
+# print('Fitness: ', fitness(vertices, distance, solution))
 
 solution_vertices = [vertices[i] for i in solution]
 # pprint.pprint(solution_vertices)
