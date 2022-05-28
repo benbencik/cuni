@@ -10,6 +10,9 @@ workflow:
 stages:
   - tests
 
+script:
+  - ./14/shellcheck.sh
+
 # Fetch the most up-to-date definition from tests repository
 include:
   - remote: 'https://gitlab.mff.cuni.cz/teaching/nswi177/2022/common/tests/-/raw/master/ci.yml'
