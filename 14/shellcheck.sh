@@ -1,12 +1,11 @@
 #!/bin/bash
 
 # cd ..
-exit_code=0
 
-assert_is_shellchecked() {
-    local severity="${1:-info}"
-    # local script="${script:-}"
-    local script=$2
+# assert_is/_shellchecked() {
+    # local severity="${1:-info}"
+    # # local script="${script:-}"
+    # local script=$2
 
     # if [[ -z "${script}" ]]; then
     #     script="${NSWI177_MAIN_SCRIPT:?}"
@@ -19,11 +18,12 @@ assert_is_shellchecked() {
     #         | batslib_decorate "Shellcheck found following issues (severity $severity)" \
     #         | fail
     # fi
-}
+# }
 
+exit_code=0
 # list through directories
 for dir in */; do
-    for thing in $dir*.sh; do
+    for thing in "$dir"*.sh; do
         if [ -f "$thing" ]; then
             # echo $thing
             shellcheck "$thing"
