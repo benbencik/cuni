@@ -6,13 +6,13 @@ exit_code=0
 assert_is_shellchecked() {
     local severity="${1:-info}"
     # local script="${script:-}"
-    local script=$(pwd)/$2
+    local script=$2
 
     # if [[ -z "${script}" ]]; then
     #     script="${NSWI177_MAIN_SCRIPT:?}"
     # fi
 
-    shellcheck -S "error" "${script}" > /dev/null
+    shellcheck "${script}"
     if [ $? == 1 ]; then
         exit_code=1
     fi
@@ -28,6 +28,7 @@ assert_is_shellchecked() {
 for dir in */; do
     for thing in $dir*.sh; do
         if [ -f "$thing" ]; then
+            # echo $thing
             assert_is_shellchecked "yeeet" $thing
         fi
     done
