@@ -1,6 +1,6 @@
 # Before class quiz for 12 (student bencikb)
 
-| Total                                            |       |
+| Total                                            |    73 |
 |--------------------------------------------------|------:|
 | Q1 (previous lab)                                |       |
 | Q2 (uses for Git branches)                       |    25 |

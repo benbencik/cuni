@@ -1,6 +1,6 @@
 # Before class quiz for 14 (student bencikb)
 
-| Total                                            |       |
+| Total                                            |    72 |
 |--------------------------------------------------|------:|
 | Q1 (feedback)                                    |       |
 | Q2 (continuous integration)                      |    25 |
