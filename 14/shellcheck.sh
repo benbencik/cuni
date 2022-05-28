@@ -12,7 +12,7 @@ assert_is_shellchecked() {
     #     script="${NSWI177_MAIN_SCRIPT:?}"
     # fi
 
-    shellcheck "${script}" > /dev/null
+    shellcheck -S 0 "${script}" > /dev/null
     if [ $? == 1 ]; then
         exit_code=1
     fi
