@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun May 22 21:16:50 2022
+# Make data base, printed on Sat May 28 20:04:06 2022
 
 # Variables
 
@@ -21,9 +21,9 @@ NO_AT_BRIDGE = 1
 # environment
 SNAP_INSTANCE_KEY = 
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.979
+I3SOCK = /run/user/1000/i3/ipc-socket.1040
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-cce28742-fec8-4b40-8ad8-ba4c4faf2611.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-4f576b90-e70e-4cfe-9742-3b96fd50628f.sock
 # environment
 LC_NAME = cs_CZ.UTF-8
 # environment
@@ -83,7 +83,7 @@ CURDIR := /home/benb/Documents/student-bencikb
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
@@ -103,7 +103,7 @@ SNAP_REEXEC =
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 4324
+VSCODE_PID = 23820
 # environment
 MOZ_ENABLE_WAYLAND = 1
 # environment
@@ -185,7 +185,7 @@ XDG_VTNR = 2
 # makefile
 .DEFAULT_GOAL := 
 # environment
-SYSTEMD_EXEC_PID = 945
+SYSTEMD_EXEC_PID = 1006
 # environment
 EDITOR = /usr/bin/nano
 # environment
@@ -281,9 +281,11 @@ Makefile:
 #  Failed to be updated.
 
 # Not a target:
+ 
 .DEFAULT:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
+ 
 #  File has not been updated.
 
 # Not a target:
@@ -315,13 +317,12 @@ GNUmakefile:
 
 # No general ('VPATH' variable) search path.
 
- 
 # strcache buffers: 1 (0) / strings = 31 / storage = 204 B / avg = 6 B
 # current buf: size = 8162 B / used = 204 B / count = 31 / avg = 6 B
 
 # strcache performance: lookups = 34 / hit rate = 8%
 # hash-table stats:
 # Load=31/8192=0%, Rehash=0, Collisions=0/34=0%
-# Finished Make data base on Sun May 22 21:16:50 2022
+# Finished Make data base on Sat May 28 20:04:06 2022
 
  
