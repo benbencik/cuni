@@ -16,5 +16,6 @@ include:
 
 
 shellcheck:
+  stage: test
   script:
     - ./14/shellcheck.sh
