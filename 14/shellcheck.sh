@@ -12,10 +12,7 @@ assert_is_shellchecked() {
     #     script="${NSWI177_MAIN_SCRIPT:?}"
     # fi
 
-    shellcheck "${script}"
-    if [ $? == 1 ]; then
-        exit_code=1
-    fi
+   
     # if [ "$status" -ne 0 ]; then
     #     exit_code = 1;
     #     echo "$output" \
@@ -29,7 +26,10 @@ for dir in */; do
     for thing in $dir*.sh; do
         if [ -f "$thing" ]; then
             # echo $thing
-            assert_is_shellchecked "yeeet" $thing
+            shellcheck "$thing"
+            if [ $? == 1 ]; then
+                exit_code=1
+            fi
         fi
     done
 done
