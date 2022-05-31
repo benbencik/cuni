@@ -1,8 +1,8 @@
 # Before class quiz for 14 (student bencikb)
 
-| Total                                            |    72 |
+| Total                                            |    97 |
 |--------------------------------------------------|------:|
-| Q1 (feedback)                                    |       |
+| Q1 (feedback)                                    |    25 |
 | Q2 (continuous integration)                      |    25 |
 | Q3 (Containers)                                  |    22 |
 | Q4 (time spent)                                  |    25 |
@@ -22,12 +22,7 @@ should pay attention but they are not crucial).
 
 ## Q1 (feedback)
 
-**Points**: 
-
-
-### General notes (collected from all solutions)
-
-This question was not yet graded, we will update the grading later this week.
+**Points**: 25
 
 
 ## Q2 (continuous integration)
