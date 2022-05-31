@@ -1,8 +1,8 @@
 # Before class quiz for 13 (student bencikb)
 
-| Total                                            |       |
+| Total                                            |   100 |
 |--------------------------------------------------|------:|
-| Q1 (previous lab)                                |       |
+| Q1 (previous lab)                                |    25 |
 | Q2 (build systems purpose)                       |    25 |
 | Q3 (Pandoc template with login)                  |    25 |
 | Q4 (Paw list)                                    |    25 |
@@ -22,12 +22,7 @@ should pay attention but they are not crucial).
 
 ## Q1 (previous lab)
 
-**Points**: 
-
-
-### General notes (collected from all solutions)
-
-This question was not yet graded, we will update the grading later this week.
+**Points**: 25
 
 
 ## Q2 (build systems purpose)
