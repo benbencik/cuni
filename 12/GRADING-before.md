@@ -1,8 +1,8 @@
 # Before class quiz for 12 (student bencikb)
 
-| Total                                            |    73 |
+| Total                                            |    98 |
 |--------------------------------------------------|------:|
-| Q1 (previous lab)                                |       |
+| Q1 (previous lab)                                |    25 |
 | Q2 (uses for Git branches)                       |    25 |
 | Q3 (bug report)                                  |    23 |
 | Q4 (best commit message)                         |    25 |
@@ -22,12 +22,7 @@ should pay attention but they are not crucial).
 
 ## Q1 (previous lab)
 
-**Points**: 
-
-
-### General notes (collected from all solutions)
-
-This question was not yet graded, we will update the grading later this week.
+**Points**: 25
 
 
 ## Q2 (uses for Git branches)
