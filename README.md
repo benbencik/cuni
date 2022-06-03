@@ -9,7 +9,7 @@ See details at course homepage: <https://d3s.mff.cuni.cz/teaching/nswi177/>
 | Group                                            | Points | Percent |
 |--------------------------------------------------|-------:|--------:|
 | Before class quizzes                             |   1244 |     95% |
-| Scripting tasks                                  |   1220 |     87% |
+| Scripting tasks                                  |   1250 |     89% |
 
 | Topic                                            | Points |
 |--------------------------------------------------|-------:|
@@ -27,7 +27,7 @@ See details at course homepage: <https://d3s.mff.cuni.cz/teaching/nswi177/>
 | Before class quiz for 12                         |     98 |
 | Before class quiz for 13                         |    100 |
 | Before class quiz for 14                         |     97 |
-| **Scripting tasks**                              |   1220 |
+| **Scripting tasks**                              |   1250 |
 | Tasks 01                                         |     97 |
 | Tasks 02                                         |     98 |
 | Tasks 03                                         |    100 |
@@ -38,6 +38,6 @@ See details at course homepage: <https://d3s.mff.cuni.cz/teaching/nswi177/>
 | Tasks 09                                         |    100 |
 | Tasks 10                                         |    100 |
 | Tasks 11                                         |     98 |
-| Tasks 12                                         |     70 |
+| Tasks 12                                         |    100 |
 | Tasks 13                                         |      0 |
 | Tasks 14                                         |     85 |
