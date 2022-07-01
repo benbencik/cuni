@@ -5,14 +5,17 @@ set -ueo pipefail
 publish_dir="public_html"
 
 # arguments
-opts_short="d:"
-opts_long="publish-dir:"
+opts_short="d:t:"
+opts_long="publish-dir:,theme-dir:"
 eval set -- "$( getopt -o "$opts_short" -l "$opts_long" -- "$@" )"
 
 while [ $# -gt 0 ]; do
     case "$1" in
         -d|--publish-dir)
             publish_dir="$2"
+            ;;
+        -t|--theme-dir)
+            data_files_dir="$2"
             ;;
     esac
     shift
