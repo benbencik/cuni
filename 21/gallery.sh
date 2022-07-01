@@ -171,25 +171,25 @@ cat $publish_dir/*/.meta | (
     echo '  "site": {'
     printf '    "title": "%s",\n' "${site_title}"
     echo '    "albums": ['
-    album_title=""
-    album_front_image=""
+    # album_title=""
+    # album_front_image=""
 
     while read -r album_dir album_front_image album_title; do
 
-        # importing variables
-        if [ -f "albums/$album_dir/album.rc" ]; then
-            . albums/$album_dir/album.rc
-        fi
+        # # importing variables
+        # if [ -f "albums/$album_dir/album.rc" ]; then
+        #     . albums/$album_dir/album.rc
+        # fi
 
-        if ! [[ -z "$title" ]]; then
-            album_title="${title}"
-            title=""
-        fi
+        # if ! [[ -z "$title" ]]; then
+        #     album_title="${title}"
+        #     title=""
+        # fi
 
-        if ! [[ -z "$front_image" ]]; then
-            album_front_image="${front_image}"
-            front_image=""
-        fi
+        # if ! [[ -z "$front_image" ]]; then
+        #     album_front_image="${front_image}"
+        #     front_image=""
+        # fi
 
         print_simple_json_dictionary \
             "dir" "${album_dir}" \
