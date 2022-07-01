@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat May 28 20:04:06 2022
+# Make data base, printed on Fri Jul  1 15:20:43 2022
 
 # Variables
 
@@ -21,9 +21,9 @@ NO_AT_BRIDGE = 1
 # environment
 SNAP_INSTANCE_KEY = 
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1040
+I3SOCK = /run/user/1000/i3/ipc-socket.997
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-4f576b90-e70e-4cfe-9742-3b96fd50628f.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-95205b0f-3de1-4330-a488-1c7b08cec747.sock
 # environment
 LC_NAME = cs_CZ.UTF-8
 # environment
@@ -45,13 +45,13 @@ GTK3_MODULES = xapp-gtk3-module
 # environment
 SNAP_INSTANCE_NAME = code
 # environment
-GDK_PIXBUF_MODULEDIR = /snap/code/97/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+GDK_PIXBUF_MODULEDIR = /snap/code/99/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
 .VARIABLES := 
 # environment
-PWD = /home/benb/Documents/student-bencikb
+PWD = /home/benb/Documents/cuni/student-bencikb
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # environment
@@ -67,7 +67,7 @@ VSCODE_LOG_STACK = false
 # automatic
 %F = $(notdir $%)
 # environment
-VSCODE_CODE_CACHE_PATH = /home/benb/.config/Code/CachedData/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
+VSCODE_CODE_CACHE_PATH = /home/benb/.config/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
 # environment
 LANG = C
 # environment
@@ -79,7 +79,7 @@ XAUTHORITY = /run/user/1000/gdm/Xauthority
 # makefile
 MAKEFLAGS = pqrR
 # makefile
-CURDIR := /home/benb/Documents/student-bencikb
+CURDIR := /home/benb/Documents/cuni/student-bencikb
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
@@ -103,7 +103,7 @@ SNAP_REEXEC =
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 23820
+VSCODE_PID = 11167
 # environment
 MOZ_ENABLE_WAYLAND = 1
 # environment
@@ -151,9 +151,9 @@ SNAP_USER_COMMON = /home/benb/snap/code/common
 # environment
 LC_TIME = cs_CZ.UTF-8
 # environment
-SNAP = /snap/code/97
+SNAP = /snap/code/99
 # environment
-SNAP_REVISION = 97
+SNAP_REVISION = 99
 # environment
 SNAP_REAL_HOME = /home/benb
 # environment
@@ -185,7 +185,7 @@ XDG_VTNR = 2
 # makefile
 .DEFAULT_GOAL := 
 # environment
-SYSTEMD_EXEC_PID = 1006
+SYSTEMD_EXEC_PID = 964
 # environment
 EDITOR = /usr/bin/nano
 # environment
@@ -199,7 +199,7 @@ MAKE_VERSION := 4.3
 # environment
 DISABLE_WAYLAND = 1
 # environment
-SNAP_DATA = /var/snap/code/97
+SNAP_DATA = /var/snap/code/99
 # environment
 SNAP_CONTEXT = 3HEDuc_CLPYlVrmFsWGGDyPF1s_ArR5EAmV8NTuPKrv_uR4xidr3
 # environment
@@ -221,11 +221,11 @@ HOME = /home/benb
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-256d9835-1.67.2-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-256d9835-1.68.1-main.sock
 # environment
 SNAP_NAME = code
 # environment
-GSETTINGS_SCHEMA_DIR = /snap/code/97/usr/share/glib-2.0/schemas
+GSETTINGS_SCHEMA_DIR = /snap/code/99/usr/share/glib-2.0/schemas
 # environment
 XDG_SESSION_ID = 3
 # default
@@ -233,7 +233,7 @@ XDG_SESSION_ID = 3
 # automatic
 <F = $(notdir $<)
 # environment
-SNAP_VERSION = c3511e6c
+SNAP_VERSION = 30d9c6cd
 # default
 SUFFIXES := 
 # environment
@@ -247,7 +247,7 @@ SNAP_COMMON = /var/snap/code/common
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink guile load
 # environment
-SNAP_USER_DATA = /home/benb/snap/code/97
+SNAP_USER_DATA = /home/benb/snap/code/99
 # environment
 GDMSESSION = i3
 # environment
@@ -263,9 +263,9 @@ SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd
 
 # Directories
 
-# . (device 2055, inode 1580064): 23 files, no impossibilities.
+# . (device 2055, inode 1580064): 24 files, no impossibilities.
 
-# 23 files, no impossibilities in 1 directories.
+# 24 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -317,12 +317,12 @@ GNUmakefile:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 31 / storage = 204 B / avg = 6 B
-# current buf: size = 8162 B / used = 204 B / count = 31 / avg = 6 B
+# strcache buffers: 1 (0) / strings = 32 / storage = 215 B / avg = 6 B
+# current buf: size = 8162 B / used = 215 B / count = 32 / avg = 6 B
 
-# strcache performance: lookups = 34 / hit rate = 8%
+# strcache performance: lookups = 35 / hit rate = 8%
 # hash-table stats:
-# Load=31/8192=0%, Rehash=0, Collisions=0/34=0%
-# Finished Make data base on Sat May 28 20:04:06 2022
+# Load=32/8192=0%, Rehash=0, Collisions=0/35=0%
+# Finished Make data base on Fri Jul  1 15:20:43 2022
 
  
