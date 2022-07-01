@@ -2,6 +2,22 @@
 
 set -ueo pipefail
 
+publish_dir="public_html"
+
+# arguments
+opts_short="d:"
+opts_long="publish-dir:"
+eval set -- "$( getopt -o "$opts_short" -l "$opts_long" -- "$@" )"
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -d|--publish-dir)
+            publish_dir="$2"
+            ;;
+    esac
+    shift
+done
+
 die() {
     local exit_code="$1"
     shift
@@ -139,7 +155,7 @@ ${debug} "Found albums: $( echo "${albums}" | paste -s -d ' ' )."
 # the albums and we do not have their meta information (that might be
 # needed for menu, for example).
 for album in ${albums}; do
-    prepare_images_for_one_album "${album}" "albums/${album}" "public_html/${album}"
+    prepare_images_for_one_album "${album}" "albums/${album}" "$publish_dir/${album}"
 done
 
 
@@ -147,7 +163,7 @@ done
 # each generated page so that each album page can create global menu of
 # albums etc.
 ${debug} "Preparing global meta JSON file."
-cat public_html/*/.meta | (
+cat $publish_dir/*/.meta | (
     echo '{'
     echo '  "site": {'
     printf '    "title": "%s",\n' "${site_title}"
@@ -159,7 +175,7 @@ cat public_html/*/.meta | (
             "image" "${album_front_image}"
         echo ','
     done
-) | sed -e '$s/.*/]}}/' | "${json_reformat}" >public_html/.meta.json
+) | sed -e '$s/.*/]}}/' | "${json_reformat}" >$publish_dir/.meta.json
 
 
 # Generate the actual HTML page for each album. Notice that we pass
@@ -171,9 +187,9 @@ for album in ${albums}; do
     ( cat "albums/${album}/HEADER.md" 2>/dev/null || true ) \
         | "${pandoc}" \
             --template "${data_files_dir}/album.tpl.html" \
-            --metadata-file="public_html/${album}/.details.json" \
-            --metadata-file="public_html/.meta.json" \
-            >"public_html/${album}/index.html"
+            --metadata-file="$publish_dir/${album}/.details.json" \
+            --metadata-file="$publish_dir/.meta.json" \
+            >"$publish_dir/${album}/index.html"
 done
 
 # Generate the index page. This one needs only the overview meta information
@@ -181,11 +197,11 @@ ${debug} "Generating index page."
 ( cat HEADER.md 2>/dev/null || true ) \
     | "${pandoc}" \
             --template "${data_files_dir}/index.tpl.html" \
-            --metadata-file="public_html/.meta.json" \
+            --metadata-file="$publish_dir/.meta.json" \
             "--metadata=title:${site_title}" \
-            >"public_html/index.html"
+            >"$publish_dir/index.html"
 
 ${debug} "Will try to copy CSS files."
 if [ -d "${data_files_dir}/assets" ]; then
-    cp "${data_files_dir}/assets/"* public_html/
+    cp "${data_files_dir}/assets/"* $publish_dir/
 fi
