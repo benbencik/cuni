@@ -82,7 +82,7 @@ prepare_images_for_one_album() {
     # custom album name
     local title=""
     if [[ -f "albums/${album_dir}/album.rc" ]]; then 
-        # shellcheck source=albums
+        # shellcheck source=/dev/null
         . albums/"${album_dir}"/album.rc; 
     fi
     if [[ -z "${title}" ]]; then local title="${album_dir}"; fi
@@ -219,6 +219,7 @@ cat "${publish_dir}"/*/.meta | (
 
         # importing variables from album config;
         if [ -f "albums/$album_dir/album.rc" ]; then
+            # shellcheck source=/dev/null
             . albums/"$album_dir"/album.rc
         fi
 
