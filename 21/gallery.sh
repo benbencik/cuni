@@ -98,11 +98,12 @@ prepare_images_for_one_album() {
         while IFS='' read -r -d $'\0' source_image; do
             dest_image="$( printf "%08d.jpg" "${counter}" )"
             cp -f "${source_image}" "${dest_dir}/${dest_image}"
+            convert "${source_image}" -resize 200x200 "${dest_dir}/thumb.${dest_image}"
             image_name="$( get_name_from_image "${source_image}" )"
             (
                 print_simple_json_dictionary \
                     "filename" "${dest_image}" \
-                    "thumbnail" "${dest_image}" \
+                    "thumbnail" "thumb.${dest_image}" \
                     "name" "${image_name}"
 
                 echo ','
