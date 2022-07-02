@@ -8,9 +8,9 @@ data_files_dir=""
 # arguments
 opts_short="d:t:"
 opts_long="publish-dir:,theme-dir:"
-eval set -- "$( getopt -o "$opts_short" -l "$opts_long" -- "$@" )"
+eval set -- "$( getopt -o "${opts_short}" -l "$opts_long" -- "$@" )"
 
-while [ $# -gt 0 ]; do
+while [[ $# -gt 0 ]]; do
     case "$1" in
         -d|--publish-dir)
             publish_dir="$2"
@@ -18,6 +18,8 @@ while [ $# -gt 0 ]; do
         -t|--theme-dir)
             data_files_dir="$2"
             ;;
+        *)
+            ;;    
     esac
     shift
 done
@@ -48,7 +50,7 @@ get_name_from_image() {
 # Does not handle special characters
 print_simple_json_dictionary() {
     echo '{'
-    while [ $# -gt 0 ]; do
+    while [[ $# -gt 0 ]]; do
         echo " \"$1\": \"$2\""
         echo ,
         shift 2
@@ -79,8 +81,11 @@ prepare_images_for_one_album() {
 
     # custom album name
     local title=""
-    if [ -f "albums/$album_dir/album.rc" ]; then . albums/"$album_dir"/album.rc; fi
-    if [ -z "$title" ]; then local title="${album_dir}"; fi
+    if [[ -f "albums/${album_dir}/album.rc" ]]; then 
+        # shellcheck source=albums
+        . albums/"${album_dir}"/album.rc; 
+    fi
+    if [[ -z "${title}" ]]; then local title="${album_dir}"; fi
 
 
     ${debug} "Preparing images for album ${album_dir} (${title})."
@@ -103,16 +108,16 @@ prepare_images_for_one_album() {
             # get the size and convert it to the right format
             # identify albums/2020-vacation/IMG_8341.jpg | cut -d " " -f 3
 
-            convert "${source_image}" -resize "$t_width x $t_height" "${dest_dir}/thumb.${dest_image}"
+            convert "${source_image}" -resize "${t_width} x ${t_height}" "${dest_dir}/thumb.${dest_image}"
             image_name="$( get_name_from_image "${source_image}" )"
             (
                 print_simple_json_dictionary \
                     "filename" "${dest_image}" \
                     "thumbnail" "thumb.${dest_image}" \
                     "name" "${image_name}" \
-                    "date_time" "$(identify -verbose ${source_image} | grep exif:DateTimeOriginal: | cut --delimiter=" " -f 6,7)" \
-                    "thumb_width" "$t_width" \
-                    "thumb_height" "$t_height"
+                    "date_time" "$(identify -verbose "${source_image}" | grep exif:DateTimeOriginal: | cut --delimiter=" " -f 6,7)" \
+                    "thumb_width" "${t_width}" \
+                    "thumb_height" "${t_height}"
 
                 echo ','
             ) >>"${dest_dir}/.details"
@@ -136,27 +141,28 @@ json_reformat="$( command -v json_reformat || echo "cat" )"
 ${debug} "Will use ${json_reformat} for reformatting JSON data."
 
 pandoc="$( command -v pandoc || true )"
-[ -z "${pandoc}" ] && die 1 "pandoc executable not found, cannot continue."
+[[ -z "${pandoc}" ]] && die 1 "pandoc executable not found, cannot continue."
 ${debug} "Found Pandoc executable at ${pandoc}."
 
 # Load global configuration, if available
-publish_dir_backup=$publish_dir
+publish_dir_backup=${publish_dir}
 thumbnail_size=""
 theme_dir=""
-thmb_width=200
-thumb_height=200
-if [ -f gallery.rc ]; then
+t_width=200
+t_height=200
+if [[ -f "gallery.rc" ]]; then
+    # shellcheck source=/dev/null
     . gallery.rc
 fi
-if [ -n thumbnail_size ]; then
-    t_width=$(echo $thumbnail_size | cut -d "x" -f 1)
-    t_height=$(echo $thumbnail_size | cut -d "x" -f 2)
+if [[ -n "${thumbnail_size}" ]]; then
+    t_width=$(echo "${thumbnail_size}" | cut -d "x" -f 1)
+    t_height=$(echo "${thumbnail_size}" | cut -d "x" -f 2)
 fi
 
 # template dir from gallery.rc
-if [ -z $data_files_dir ]; then
-    if [ -n $theme_dir ]; then
-        data_files_dir=$theme_dir
+if [[ -z "${data_files_dir}" ]]; then
+    if [[ -n "${theme_dir}" ]]; then
+        data_files_dir=${theme_dir}
     fi 
 fi
 
@@ -164,15 +170,15 @@ fi
 # Setup path to template files (replace the following with something like
 # /usr/local/share/nswi177-gallery when installing system wide).
 data_files_dir="${data_files_dir:-}"
-if [ -z "${data_files_dir}" ]; then
+if [[ -z "${data_files_dir}" ]]; then
     data_files_dir="$( dirname "$( realpath "${BASH_SOURCE[0]}" )" )"
 fi
 ${debug} "Loading data files from ${data_files_dir}"
 
 
 # argument option has precedence
-if [ $publish_dir_backup != "public_html" ]; then
-    publish_dir=$publish_dir_backup
+if [[ "$publish_dir_backup" != "public_html" ]]; then
+    publish_dir=${publish_dir_backup}
 fi
 
 # Default configuration values
@@ -181,7 +187,7 @@ site_title="${site_title:-My photo gallery}"
 
 # Get list of albums (see get_album_list to understand why this is
 # safe to be used in for loops).
-if ! [ -d "albums" ]; then
+if ! [[ -d "albums" ]]; then
     die 2 "No albums/ directory found."
 fi
 albums="$( get_album_list )"
@@ -201,7 +207,7 @@ done
 # each generated page so that each album page can create global menu of
 # albums etc.
 ${debug} "Preparing global meta JSON file."
-cat "$publish_dir"/*/.meta | (
+cat "${publish_dir}"/*/.meta | (
     echo '{'
     echo '  "site": {'
     printf '    "title": "%s",\n' "${site_title}"
@@ -255,9 +261,9 @@ for album in ${albums}; do
     ( cat "albums/${album}/HEADER.md" 2>/dev/null || true ) \
         | "${pandoc}" \
             --template "${data_files_dir}/album.tpl.html" \
-            --metadata-file="$publish_dir/.meta.json" \
-            --metadata-file="$publish_dir/${album}/.details.json" \
-            >"$publish_dir/${album}/index.html"
+            --metadata-file="${publish_dir}/.meta.json" \
+            --metadata-file="${publish_dir}/${album}/.details.json" \
+            >"${publish_dir}/${album}/index.html"
 done
 
 # Generate the index page. This one needs only the overview meta information
