@@ -3,6 +3,8 @@
 set -ueo pipefail
 
 publish_dir="public_html"
+data_files_dir=""
+
 # arguments
 opts_short="d:t:"
 opts_long="publish-dir:,theme-dir:"
@@ -137,18 +139,10 @@ pandoc="$( command -v pandoc || true )"
 [ -z "${pandoc}" ] && die 1 "pandoc executable not found, cannot continue."
 ${debug} "Found Pandoc executable at ${pandoc}."
 
-
-# Setup path to template files (replace the following with something like
-# /usr/local/share/nswi177-gallery when installing system wide).
-data_files_dir="${data_files_dir:-}"
-if [ -z "${data_files_dir}" ]; then
-    data_files_dir="$( dirname "$( realpath "${BASH_SOURCE[0]}" )" )"
-fi
-${debug} "Loading data files from ${data_files_dir}"
-
 # Load global configuration, if available
 publish_dir_backup=$publish_dir
 thumbnail_size=""
+theme_dir=""
 thmb_width=200
 thumb_height=200
 if [ -f gallery.rc ]; then
@@ -158,6 +152,23 @@ if [ -n thumbnail_size ]; then
     t_width=$(echo $thumbnail_size | cut -d "x" -f 1)
     t_height=$(echo $thumbnail_size | cut -d "x" -f 2)
 fi
+
+# template dir from gallery.rc
+if [ -z $data_files_dir ]; then
+    if [ -n $theme_dir ]; then
+        data_files_dir=$theme_dir
+    fi 
+fi
+
+
+# Setup path to template files (replace the following with something like
+# /usr/local/share/nswi177-gallery when installing system wide).
+data_files_dir="${data_files_dir:-}"
+if [ -z "${data_files_dir}" ]; then
+    data_files_dir="$( dirname "$( realpath "${BASH_SOURCE[0]}" )" )"
+fi
+${debug} "Loading data files from ${data_files_dir}"
+
 
 # argument option has precedence
 if [ $publish_dir_backup != "public_html" ]; then
