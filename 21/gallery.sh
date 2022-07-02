@@ -176,7 +176,7 @@ cat $publish_dir/*/.meta | (
 
     while read -r album_dir album_front_image album_title; do
 
-        # importing variables
+        # importing variables from album config
         if [ -f "albums/$album_dir/album.rc" ]; then
             . albums/$album_dir/album.rc
         fi
@@ -187,7 +187,17 @@ cat $publish_dir/*/.meta | (
         fi
 
         if ! [[ -z "$front_image" ]]; then
-            album_front_image="${front_image}"
+            # big pipe for converting the image name
+            album_front_image=$(find "albums/$album_dir" -type f -iname '*.jpg' -print0 | sort -z | (
+                counter=1
+                while IFS='' read -r -d $'\0' source_image; do
+                    if [ $source_image = $front_image ]; then
+                        printf "%08d.jpg" "${counter}"
+                        break;
+                    fi
+                    counter=$(( counter + 1 ))
+                done
+            ))
             front_image=""
         fi
 
