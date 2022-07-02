@@ -20,7 +20,11 @@ $for(images)$
 <a href="$it.filename$">
 <img src="$it.filename$" width="200" height="200">
 </a>
+$if(it.date_time)$
+<br />
+$it.date_time$
 </p>
+$endif$
 $endfor$
 </div>
 

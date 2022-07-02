@@ -78,7 +78,7 @@ prepare_images_for_one_album() {
 
     # custom album name
     local title=""
-    if [ -f "albums/$album_dir/album.rc" ]; then . albums/$album_dir/album.rc; fi
+    if [ -f "albums/$album_dir/album.rc" ]; then . albums/"$album_dir"/album.rc; fi
     if [ -z "$title" ]; then local title="${album_dir}"; fi
 
 
@@ -104,7 +104,8 @@ prepare_images_for_one_album() {
                 print_simple_json_dictionary \
                     "filename" "${dest_image}" \
                     "thumbnail" "thumb.${dest_image}" \
-                    "name" "${image_name}"
+                    "name" "${image_name}" \
+                    "date_time" "$(identify -verbose ${source_image} | grep exif:DateTimeOriginal: | cut --delimiter=" " -f 6,7)"
 
                 echo ','
             ) >>"${dest_dir}/.details"
@@ -171,7 +172,7 @@ done
 # each generated page so that each album page can create global menu of
 # albums etc.
 ${debug} "Preparing global meta JSON file."
-cat $publish_dir/*/.meta | (
+cat "$publish_dir"/*/.meta | (
     echo '{'
     echo '  "site": {'
     printf '    "title": "%s",\n' "${site_title}"
@@ -183,20 +184,20 @@ cat $publish_dir/*/.meta | (
 
         # importing variables from album config;
         if [ -f "albums/$album_dir/album.rc" ]; then
-            . albums/$album_dir/album.rc
+            . albums/"$album_dir"/album.rc
         fi
 
-        if ! [[ -z "$title" ]]; then
+        if [ -n "$title" ]; then
             album_title="${title}"
             title=""
         fi
 
-        if ! [[ -z "$front_image" ]]; then
+        if [ -n "$front_image" ]; then
             # big pipe for converting the image name
             album_front_image=$(find "albums/$album_dir" -type f -iname '*.jpg' -print0 | sort -z | (
                 counter=1
                 while IFS='' read -r -d $'\0' source_image; do
-                    if [ $source_image = $front_image ]; then
+                    if [ "$source_image" = "$front_image" ]; then
                         printf "%08d.jpg" "${counter}"
                         break;
                     fi
@@ -212,7 +213,7 @@ cat $publish_dir/*/.meta | (
             "image" "${album_front_image}"
         echo ','
     done
-) | sed -e '$s/.*/]}}/' | "${json_reformat}" >$publish_dir/.meta.json
+) | sed -e '$s/.*/]}}/' | "${json_reformat}" >"$publish_dir"/.meta.json
 
 
 # Generate the actual HTML page for each album. Notice that we pass
@@ -240,6 +241,5 @@ ${debug} "Generating index page."
 
 ${debug} "Will try to copy CSS files."
 if [ -d "${data_files_dir}/assets" ]; then
-    cp "${data_files_dir}/assets/"* $publish_dir/
+    cp "${data_files_dir}/assets/"* "$publish_dir"/
 fi
-
