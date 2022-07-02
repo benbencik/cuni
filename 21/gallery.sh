@@ -202,7 +202,8 @@ cat "$publish_dir"/*/.meta | (
             album_front_image=$(find "albums/$album_dir" -type f -iname '*.jpg' -print0 | sort -z | (
                 counter=1
                 while IFS='' read -r -d $'\0' source_image; do
-                    if [ "$source_image" = "$front_image" ]; then
+                    img=$(echo "$source_image" | cut -d "/" -f 3)
+                    if [ "$img" = "$front_image" ]; then
                         printf "%08d.jpg" "${counter}"
                         break;
                     fi
