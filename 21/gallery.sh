@@ -215,7 +215,7 @@ cat "$publish_dir"/*/.meta | (
         print_simple_json_dictionary \
             "dir" "${album_dir}" \
             "title" "${album_title}" \
-            "image" "${album_front_image}"
+            "image" "${album_dir}/${album_front_image}"
             # "date_time" "$(identify -verbose albums/${album_dir}/${front_image} | grep exif:DateTimeOriginal: | cut --delimiter=" " -f 6,7)"
         echo ','
     done
