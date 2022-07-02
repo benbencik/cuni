@@ -141,11 +141,16 @@ if [ -z "${data_files_dir}" ]; then
 fi
 ${debug} "Loading data files from ${data_files_dir}"
 
-
 # Load global configuration, if available
+publish_dir_backup=$publish_dir
 if [ -f gallery.rc ]; then
     . gallery.rc
 fi
+# argument option has precedence
+if [ $publish_dir_backup != "public_html" ]; then
+    publish_dir=$publish_dir_backup
+fi
+
 # Default configuration values
 site_title="${site_title:-My photo gallery}"
 
@@ -211,6 +216,7 @@ cat "$publish_dir"/*/.meta | (
             "dir" "${album_dir}" \
             "title" "${album_title}" \
             "image" "${album_front_image}"
+            # "date_time" "$(identify -verbose albums/${album_dir}/${front_image} | grep exif:DateTimeOriginal: | cut --delimiter=" " -f 6,7)"
         echo ','
     done
 ) | sed -e '$s/.*/]}}/' | "${json_reformat}" >"$publish_dir"/.meta.json
