@@ -76,7 +76,11 @@ prepare_images_for_one_album() {
     local source_dir="$2"
     local dest_dir="$3"
 
-    local title="${album_dir}"
+    # custom album name
+    local title=""
+    if [ -f "albums/$album_dir/album.rc" ]; then . albums/$album_dir/album.rc; fi
+    if [ -z "$title" ]; then local title="${album_dir}"; fi
+
 
     ${debug} "Preparing images for album ${album_dir} (${title})."
 
@@ -176,7 +180,7 @@ cat $publish_dir/*/.meta | (
 
     while read -r album_dir album_front_image album_title; do
 
-        # importing variables from album config
+        # importing variables from album config;
         if [ -f "albums/$album_dir/album.rc" ]; then
             . albums/$album_dir/album.rc
         fi
@@ -219,8 +223,8 @@ for album in ${albums}; do
     ( cat "albums/${album}/HEADER.md" 2>/dev/null || true ) \
         | "${pandoc}" \
             --template "${data_files_dir}/album.tpl.html" \
-            --metadata-file="$publish_dir/${album}/.details.json" \
             --metadata-file="$publish_dir/.meta.json" \
+            --metadata-file="$publish_dir/${album}/.details.json" \
             >"$publish_dir/${album}/index.html"
 done
 
