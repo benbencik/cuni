@@ -101,7 +101,7 @@ prepare_images_for_one_album() {
             # get the size and convert it to the right format
             # identify albums/2020-vacation/IMG_8341.jpg | cut -d " " -f 3
 
-            convert "${source_image}" -resize 1x1 "${dest_dir}/thumb.${dest_image}"
+            convert "${source_image}" -resize "$t_width x $t_height" "${dest_dir}/thumb.${dest_image}"
             image_name="$( get_name_from_image "${source_image}" )"
             (
                 print_simple_json_dictionary \
@@ -229,8 +229,7 @@ cat "$publish_dir"/*/.meta | (
         print_simple_json_dictionary \
             "dir" "${album_dir}" \
             "title" "${album_title}" \
-            "image" "${album_dir}/${album_front_image}"
-            # "date_time" "$(identify -verbose albums/${album_dir}/${front_image} | grep exif:DateTimeOriginal: | cut --delimiter=" " -f 6,7)"
+            "image" "${album_front_image}"
         echo ','
     done
 ) | sed -e '$s/.*/]}}/' | "${json_reformat}" >"$publish_dir"/.meta.json
