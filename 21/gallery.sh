@@ -3,7 +3,6 @@
 set -ueo pipefail
 
 publish_dir="public_html"
-
 # arguments
 opts_short="d:t:"
 opts_long="publish-dir:,theme-dir:"
@@ -98,14 +97,20 @@ prepare_images_for_one_album() {
         while IFS='' read -r -d $'\0' source_image; do
             dest_image="$( printf "%08d.jpg" "${counter}" )"
             cp -f "${source_image}" "${dest_dir}/${dest_image}"
-            convert "${source_image}" -resize 200x200 "${dest_dir}/thumb.${dest_image}"
+
+            # get the size and convert it to the right format
+            # identify albums/2020-vacation/IMG_8341.jpg | cut -d " " -f 3
+
+            convert "${source_image}" -resize 1x1 "${dest_dir}/thumb.${dest_image}"
             image_name="$( get_name_from_image "${source_image}" )"
             (
                 print_simple_json_dictionary \
                     "filename" "${dest_image}" \
                     "thumbnail" "thumb.${dest_image}" \
                     "name" "${image_name}" \
-                    "date_time" "$(identify -verbose ${source_image} | grep exif:DateTimeOriginal: | cut --delimiter=" " -f 6,7)"
+                    "date_time" "$(identify -verbose ${source_image} | grep exif:DateTimeOriginal: | cut --delimiter=" " -f 6,7)" \
+                    "thumb_width" "$t_width" \
+                    "thumb_height" "$t_height"
 
                 echo ','
             ) >>"${dest_dir}/.details"
@@ -143,9 +148,17 @@ ${debug} "Loading data files from ${data_files_dir}"
 
 # Load global configuration, if available
 publish_dir_backup=$publish_dir
+thumbnail_size=""
+thmb_width=200
+thumb_height=200
 if [ -f gallery.rc ]; then
     . gallery.rc
 fi
+if [ -n thumbnail_size ]; then
+    t_width=$(echo $thumbnail_size | cut -d "x" -f 1)
+    t_height=$(echo $thumbnail_size | cut -d "x" -f 2)
+fi
+
 # argument option has precedence
 if [ $publish_dir_backup != "public_html" ]; then
     publish_dir=$publish_dir_backup
