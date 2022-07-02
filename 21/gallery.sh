@@ -241,3 +241,4 @@ ${debug} "Will try to copy CSS files."
 if [ -d "${data_files_dir}/assets" ]; then
     cp "${data_files_dir}/assets/"* $publish_dir/
 fi
+
