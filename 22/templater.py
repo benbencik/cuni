@@ -2,7 +2,6 @@
 
 import argparse
 import io
-from itertools import accumulate
 import os
 import sys
 
