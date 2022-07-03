@@ -2,6 +2,7 @@
 
 import argparse
 import io
+from itertools import accumulate
 import os
 import sys
 
@@ -12,11 +13,11 @@ def jinja_filter_liters_to_gallons(text):
     return float(text) * 0.2199692
 
 
-def get_jinja_environment(template_dir):
+def get_jinja_environment(template_dir, gallons):
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
                              autoescape=jinja2.select_autoescape(['html', 'xml']),
                              extensions=['jinja2.ext.do'])
-    env.filters['l2gal'] = jinja_filter_liters_to_gallons
+    if gallons: env.filters['l2gal'] = jinja_filter_liters_to_gallons
     return env
 
 def arabic2roman(number):
@@ -41,10 +42,11 @@ def main(argv):
         metavar='INPUT',
         help='Input filename'
     )
+    args.add_argument('--use-us-gallons', action='store_true', dest='gallons')
 
     config = args.parse_args(argv)
 
-    env = get_jinja_environment(os.path.dirname(config.template))
+    env = get_jinja_environment(os.path.dirname(config.template), args.gallons)
     template = env.get_template(config.template)
 
     content = ""
