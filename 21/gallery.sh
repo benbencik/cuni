@@ -106,11 +106,10 @@ prepare_images_for_one_album() {
             cp -f "${source_image}" "${dest_dir}/${dest_image}"
 
             # get the size and convert it to the right format
-            if [ -n $thumbnail_size ]; then
-                convert "${source_image}" -resize "$thumbnail_size" "${dest_dir}/thumb.${dest_image}"
-                t_width=$(identify "${dest_dir}/thumb.${dest_image}" | cut -d " " -f 3 | cut -d "x" -f 1)
-                t_height=$(identify "${dest_dir}/thumb.${dest_image}" | cut -d " " -f 3 | cut -d "x" -f 2) 
-            fi
+            convert "${source_image}" -resize "$thumbnail_size" "${dest_dir}/thumb.${dest_image}"
+            t_width=$(identify "${dest_dir}/thumb.${dest_image}" | cut -d " " -f 3 | cut -d "x" -f 1)
+            t_height=$(identify "${dest_dir}/thumb.${dest_image}" | cut -d " " -f 3 | cut -d "x" -f 2) 
+            
             image_name="$( get_name_from_image "${source_image}" )"
             (
                 print_simple_json_dictionary \
@@ -148,18 +147,18 @@ ${debug} "Found Pandoc executable at ${pandoc}."
 
 # Load global configuration, if available
 publish_dir_backup=${publish_dir}
-thumbnail_size=""
+thumbnail_size="200x200"
 theme_dir=""
-t_width=200
-t_height=200
+# t_width=200
+# t_height=200
 if [[ -f "gallery.rc" ]]; then
     # shellcheck source=/dev/null
     . gallery.rc
 fi
-if [[ -n "${thumbnail_size}" ]]; then
-    t_width=$(echo "${thumbnail_size}" | cut -d "x" -f 1)
-    t_height=$(echo "${thumbnail_size}" | cut -d "x" -f 2)
-fi
+# if [[ -n "${thumbnail_size}" ]]; then
+#     t_width=$(echo "${thumbnail_size}" | cut -d "x" -f 1)
+#     t_height=$(echo "${thumbnail_size}" | cut -d "x" -f 2)
+# fi
 
 # template dir from gallery.rc
 if [[ -z "${data_files_dir}" ]]; then
