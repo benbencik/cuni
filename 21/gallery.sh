@@ -106,9 +106,11 @@ prepare_images_for_one_album() {
             cp -f "${source_image}" "${dest_dir}/${dest_image}"
 
             # get the size and convert it to the right format
-            # identify albums/2020-vacation/IMG_8341.jpg | cut -d " " -f 3
 
             convert "${source_image}" -resize "${t_width} x ${t_height}" "${dest_dir}/thumb.${dest_image}"
+            if [ -z "$t_width" ]; then
+                t_width=$(identify $source_image | cut -d " " -f 3 | cut -d "x" -f 1)
+            fi
             image_name="$( get_name_from_image "${source_image}" )"
             (
                 print_simple_json_dictionary \
@@ -219,7 +221,7 @@ cat "${publish_dir}"/*/.meta | (
 
         # importing variables from album config;
         if [ -f "albums/$album_dir/album.rc" ]; then
-            # shellcheck source=/dev/null
+            # shellcheck source=albums/*/*
             . albums/"$album_dir"/album.rc
         fi
 
