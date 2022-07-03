@@ -106,12 +106,10 @@ prepare_images_for_one_album() {
             cp -f "${source_image}" "${dest_dir}/${dest_image}"
 
             # get the size and convert it to the right format
-
-            convert "${source_image}" -resize "${t_width} x ${t_height}" "${dest_dir}/thumb.${dest_image}"
-            if [ -z "$t_width" ]; then
-                x=$(identify $source_image | cut -d " " -f 3 | cut -d "x" -f 1)
-                y=$(identify $source_image | cut -d " " -f 3 | cut -d "x" -f 2) 
-                t_width=$(( $x - $y + $t_height ))
+            if [ -n $thumbnail_size ]; then
+                convert "${source_image}" -resize "$thumbnail_size" "${dest_dir}/thumb.${dest_image}"
+                t_width=$(identify "${dest_dir}/thumb.${dest_image}" | cut -d " " -f 3 | cut -d "x" -f 1)
+                t_height=$(identify "${dest_dir}/thumb.${dest_image}" | cut -d " " -f 3 | cut -d "x" -f 2) 
             fi
             image_name="$( get_name_from_image "${source_image}" )"
             (
