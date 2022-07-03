@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Jul  3 11:55:24 2022
+# Make data base, printed on Mon Jul  4 00:10:59 2022
 
 # Variables
 
@@ -21,9 +21,9 @@ NO_AT_BRIDGE = 1
 # environment
 SNAP_INSTANCE_KEY = 
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1024
+I3SOCK = /run/user/1000/i3/ipc-socket.1020
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-f4e3195a-fc5c-44c4-b221-64bc9f864c7d.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-5bb94e1a-df85-4632-93fd-b3a6082aaf1b.sock
 # environment
 LC_NAME = cs_CZ.UTF-8
 # environment
@@ -103,7 +103,7 @@ SNAP_REEXEC =
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 2085
+VSCODE_PID = 3938
 # environment
 MOZ_ENABLE_WAYLAND = 1
 # environment
@@ -119,7 +119,6 @@ CHROME_DESKTOP = code-url-handler.desktop
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # automatic
- 
 <D = $(patsubst %/,%,$(dir $<))
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
@@ -180,14 +179,13 @@ GNUMAKEFLAGS :=
 # environment
 LOGNAME = benb
 # environment
- 
 SNAP_ARCH = amd64
 # environment
 XDG_VTNR = 2
 # makefile
 .DEFAULT_GOAL := 
 # environment
-SYSTEMD_EXEC_PID = 991
+SYSTEMD_EXEC_PID = 986
 # environment
 EDITOR = /usr/bin/nano
 # environment
@@ -241,7 +239,6 @@ SUFFIXES :=
 # environment
 QT_AUTO_SCREEN_SCALE_FACTOR = 1
 # environment
- 
 VSCODE_CLI = 1
 # environment
 ELECTRON_NO_ATTACH_CONSOLE = 1
@@ -279,7 +276,6 @@ SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
- 
 #  File does not exist.
 #  File has been updated.
 #  Failed to be updated.
@@ -325,6 +321,6 @@ GNUmakefile:
 # strcache performance: lookups = 39 / hit rate = 7%
 # hash-table stats:
 # Load=36/8192=0%, Rehash=0, Collisions=0/39=0%
-# Finished Make data base on Sun Jul  3 11:55:24 2022
+# Finished Make data base on Mon Jul  4 00:10:59 2022
 
  

@@ -45,13 +45,14 @@ def main(argv):
 
     config = args.parse_args(argv)
 
-    env = get_jinja_environment(os.path.dirname(config.template), args.gallons)
+    env = get_jinja_environment(os.path.dirname(config.template), 1)
     template = env.get_template(config.template)
 
     content = ""
     with open(config.input, 'r') as f:
         content = f.read()
 
+    print(content)
     # TODO: extract YAML header next to these variables
     variables = {
         'content': content,

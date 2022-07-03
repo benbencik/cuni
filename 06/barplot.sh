@@ -1,29 +1,31 @@
 #!/bin/bash
+
 set -eu
 
 plot_line() {
     for i in $(seq "$inp"); do
+    echo "$i" > /dev/null
         echo -n '#'
     done
 }
 
-$max = 0;co
+max=0;
 
 for inp in "$@"; do
-    if $inp > $max; then
-        $max = $inp
+    if [ "$inp" -ge "$max" ]; then
+        max=$inp
     fi
 done
 
-if $max < 60; then
+if [ "$max" -ge 60 ]; then
     for inp in "$@"; do
-        plot_line $inp
+        plot_line "$inp"
         echo
     done
 else
-    $ratio = $max / 60
+    ratio="$(( max / 60 ))"
     for inp in "$@"; do
-        plot_line $($inp * $ratio)
+        plot_line "$(( inp * ratio ))"
         echo
     done
 fi
