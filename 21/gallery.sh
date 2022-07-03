@@ -109,7 +109,9 @@ prepare_images_for_one_album() {
 
             convert "${source_image}" -resize "${t_width} x ${t_height}" "${dest_dir}/thumb.${dest_image}"
             if [ -z "$t_width" ]; then
-                t_width=$(identify $source_image | cut -d " " -f 3 | cut -d "x" -f 1)
+                x=$(identify $source_image | cut -d " " -f 3 | cut -d "x" -f 1)
+                y=$(identify $source_image | cut -d " " -f 3 | cut -d "x" -f 2) 
+                t_width=$(( $x - $y + $t_height ))
             fi
             image_name="$( get_name_from_image "${source_image}" )"
             (
