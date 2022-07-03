@@ -220,7 +220,7 @@ cat "${publish_dir}"/*/.meta | (
 
         # importing variables from album config;
         if [ -f "albums/$album_dir/album.rc" ]; then
-            # shellcheck source=albums/*/*
+            # shellcheck source=/dev/null
             . albums/"$album_dir"/album.rc
         fi
 
