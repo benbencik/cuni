@@ -1,2 +1,2 @@
 [console_scripts]
-nswi177-jinja-templater = templater:main
+nswi177-jinja-templater = .templater:main
