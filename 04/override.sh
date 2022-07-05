@@ -6,7 +6,8 @@
 
 set -e
 set -o pipefail
-test -f .NO_HEADER || cat HEADER 2> /dev/null && echo || exit 1 | cat "Error: HEADER not found." >&2
+test -f .NO_HEADER || cat HEADER 2> /dev/null || exit 1 | cat "Error: HEADER not found." >&2
+
 
 # test -f .NO_HEADER || cat HEADER 2> /dev/null
 # test -f .NO_HEADER || cat HEADER 2> /dev/null && echo

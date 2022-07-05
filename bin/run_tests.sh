@@ -91,6 +91,7 @@ fi
 
 if [ $# -eq 0 ]; then
     rc=0
+    echo "$rc" > /dev/null
     "${repository_cache_dir}/run.sh" tasks quizzes
 else
     "${repository_cache_dir}/run.sh" "$@"
