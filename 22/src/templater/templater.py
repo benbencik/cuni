@@ -56,18 +56,17 @@ def main(argv):
     }
 
     with open(config.input, 'r') as f:
-        in_header = False
+        in_header = 0
         add_to_list = [False, ""]
         while f:
             line = f.readline()
-            variables['content'] += line
+            if in_header == 2: variables['content'] += line
             line = line.strip()
             if not line: break
             
             if line == "---":
                 # check if i am in header
-                if not in_header: in_header = True
-                else: in_header = False
+                in_header += 1
             elif in_header:
                 if add_to_list[0]:
                     # appending to the list
@@ -83,8 +82,6 @@ def main(argv):
                         variables[var[0]] = []
                         add_to_list = [True, var[0]]
                     
-    print(variables)
-
     # Use \n even on Windows
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, newline='\n')
 
