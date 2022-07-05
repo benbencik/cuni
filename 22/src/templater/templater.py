@@ -14,10 +14,15 @@ def jinja_filter_liters_to_gallons(text):
     return float(text) * 0.2199692
 
 def a2r(number):
-    if number <= 0: 
-        os.write(2, "unsuccessful conversion")
+    try:
+        num = int(number)
+        if num <= 0: 
+            os.write(2, str.encode("unsuccessful conversion"))
+            return "NaN"
+        return roman.toRoman(number)
+    except:
+        os.write(2, str.encode("unsuccessful conversion"))
         return "NaN"
-    else: return roman.toRoman(number)
 
 def get_jinja_environment(template_dir, gallons):
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
