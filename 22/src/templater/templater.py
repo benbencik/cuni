@@ -11,7 +11,7 @@ import roman
 
 
 def jinja_filter_liters_to_gallons(text):
-    return float(text) * 0.264172052
+    return float(text) * 0.2199692
 
 def a2r(number):
     try:
