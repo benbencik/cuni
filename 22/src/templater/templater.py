@@ -89,8 +89,8 @@ def main(argv):
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, newline='\n')
 
     result = template.render(variables)
+    print(result)
 
-    print(result, 'this is result')
 
 def enrty_point():
     # if __name__ == '__main__':
