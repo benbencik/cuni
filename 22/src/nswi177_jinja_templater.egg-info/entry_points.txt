@@ -1,2 +1,0 @@
-[console_scripts]
-nswi177-jinja-templater = templater.templater:enrty_point
