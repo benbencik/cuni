@@ -11,17 +11,17 @@ import roman
 
 
 def jinja_filter_liters_to_gallons(text):
-    return float(text) * 0.2199692
+    return float(text) * 0.264172052
 
 def a2r(number):
     try:
         num = int(number)
         if num <= 0: 
-            os.write(2, str.encode("unsuccessful conversion"))
+            os.write(2, str.encode(f"Warning: arabic2roman: unable to convert {number}."))
             return "NaN"
         return roman.toRoman(number)
     except:
-        os.write(2, str.encode("unsuccessful conversion"))
+        os.write(2, str.encode(f"Warning: arabic2roman: unable to convert {number}."))
         return "NaN"
 
 def get_jinja_environment(template_dir, gallons):
