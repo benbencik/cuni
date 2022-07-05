@@ -47,10 +47,16 @@ def main(argv):
         dest='input',
         required=True,
         metavar='INPUT',
-        help='Input filename'
-    )
-    args.add_argument('--use-us-gallons', action='store_true', dest='gallons')
-
+        help='Input filename')
+    args.add_argument(
+        '--use-us-gallons', 
+        action='store_true',
+        dest='gallons')
+    args.add_argument(
+        '-V',
+        nargs='*',
+        action='append',
+        dest='additional_vars')
     config = args.parse_args(argv)
 
     env = get_jinja_environment(os.path.dirname(config.template), 1)
@@ -61,6 +67,11 @@ def main(argv):
         'TEMPLATE': config.template,
         'INPUT': config.input,
     }
+
+    if config.additional_vars:
+        for arg in config.additional_vars:
+            arg = arg[0].split('=')
+            variables[arg[0]] = arg[1]
 
     with open(config.input, 'r') as f:
         in_header = 0
