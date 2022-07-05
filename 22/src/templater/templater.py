@@ -9,22 +9,24 @@ import sys
 import jinja2
 import roman
 
+
 def jinja_filter_liters_to_gallons(text):
     return float(text) * 0.2199692
 
+def a2r(number):
+    if number <= 0: 
+        os.write(2, "unsuccessful conversion")
+        return "NaN"
+    else: return roman.toRoman(number)
 
 def get_jinja_environment(template_dir, gallons):
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
                              autoescape=jinja2.select_autoescape(['html', 'xml']),
                              extensions=['jinja2.ext.do'])
     if gallons: env.filters['l2gal'] = jinja_filter_liters_to_gallons
+    env.filters['arabic2roman'] = a2r
     return env
 
-def arabic2roman(number):
-    if number <= 0: 
-        os.write(2, "unsuccessful conversion")
-        return "NaN"
-    else: return roman.toRoman(number)
 
 
 def main(argv):
