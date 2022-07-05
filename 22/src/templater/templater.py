@@ -27,6 +27,7 @@ def arabic2roman(number):
 
 
 def main(argv):
+    print("nieco2")
     args = argparse.ArgumentParser(description='Templater')
     args.add_argument(
         '--template',
@@ -67,6 +68,7 @@ def main(argv):
 
     print(result)
 
-
-if __name__ == '__main__':
+def enrty_point():
+    print("nieco")
+    # if __name__ == '__main__':
     main(sys.argv[1:])
