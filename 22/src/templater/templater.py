@@ -3,6 +3,7 @@
 import argparse
 import io
 import os
+from re import I
 import sys
 
 import jinja2
@@ -27,7 +28,6 @@ def arabic2roman(number):
 
 
 def main(argv):
-    print("nieco2")
     args = argparse.ArgumentParser(description='Templater')
     args.add_argument(
         '--template',
@@ -49,26 +49,52 @@ def main(argv):
     env = get_jinja_environment(os.path.dirname(config.template), 1)
     template = env.get_template(config.template)
 
-    content = ""
-    with open(config.input, 'r') as f:
-        content = f.read()
-
-    print(content)
-    # TODO: extract YAML header next to these variables
     variables = {
-        'content': content,
+        'content': "",
         'TEMPLATE': config.template,
         'INPUT': config.input,
     }
+
+    with open(config.input, 'r') as f:
+        in_header = False
+        add_to_list = [False, ""]
+        while f:
+            line = f.readline()
+            variables['content'] += line
+            line = line.strip()
+            if not line: break
+            
+            if line == "---":
+                # check if i am in header
+                if not in_header: in_header = True
+                else: in_header = False
+            elif in_header:
+                if add_to_list[0]:
+                    # appending to the list
+                    var = line.split(" ")
+                    if var[0] == "-": variables[add_to_list[1]].append(var[1])
+                    else: add_to_list[0] = False
+                else:
+                    # assign variables
+                    var = line.split(":")
+                    if var[1]: 
+                        variables[var[0]] = var[1][1:]
+                    else:
+                        variables[var[0]] = []
+                        add_to_list = [True, var[0]]
+                    
+    print(variables)
 
     # Use \n even on Windows
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, newline='\n')
 
     result = template.render(variables)
 
-    print(result)
+    print(result, 'this is result')
 
 def enrty_point():
-    print("nieco")
     # if __name__ == '__main__':
+    main(sys.argv[1:])
+
+if __name__ == '__main__':
     main(sys.argv[1:])
