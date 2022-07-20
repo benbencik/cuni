@@ -8,8 +8,12 @@ See details at course homepage: <https://d3s.mff.cuni.cz/teaching/nswi177/>
 
 | Group                                            | Points | Percent |
 |--------------------------------------------------|-------:|--------:|
+| **Final grade**                                  |      1 |     93% |
 | Before class quizzes                             |   1244 |     95% |
 | Scripting tasks                                  |   1250 |     89% |
+| Gallery (final task 21)                          |    495 |     99% |
+| Templater (final task 22)                        |    420 |     84% |
+| Disk (final task 23)                             |    500 |    100% |
 
 | Topic                                            | Points |
 |--------------------------------------------------|-------:|
@@ -41,3 +45,7 @@ See details at course homepage: <https://d3s.mff.cuni.cz/teaching/nswi177/>
 | Tasks 12                                         |    100 |
 | Tasks 13                                         |      0 |
 | Tasks 14                                         |     85 |
+| **Final task: gallery**                          |    495 |
+| **Final task: templater**                        |    420 |
+| **Final task: disk**                             |    500 |
+
