@@ -1,0 +1,185 @@
+Running with gitlab-runner 14.10.0 (c6bb62f6)
+  on gitlab.mff docker Mtt-jvRo
+Preparing the "docker" executor 00:02
+Using Docker executor with image registry.gitlab.com/mffd3s/nswi177/student:latest ...
+Pulling docker image registry.gitlab.com/mffd3s/nswi177/student:latest ...
+Using docker image sha256:53bebeca2d4af49203a9ae30d391c38ec3ba62d27473f9922d97684cf42c6bd3 for registry.gitlab.com/mffd3s/nswi177/student:latest with digest registry.gitlab.com/mffd3s/nswi177/student@sha256:fa4e8466848c1a97b90e9db29776aac3c8115ad787eac3f2c134b6759e304e09 ...
+Preparing environment 00:00
+Running on runner-mtt-jvro-project-5767-concurrent-2 via gitlab-runner...
+Getting source from Git repository 00:03
+Fetching changes with git depth set to 20...
+Initialized empty Git repository in /builds/teaching/nswi177/2022/student-bencikb/.git/
+Created fresh repository.
+Checking out 6a4e979d as master...
+Skipping Git submodules setup
+Executing "step_script" stage of the job script 00:44
+Using docker image sha256:53bebeca2d4af49203a9ae30d391c38ec3ba62d27473f9922d97684cf42c6bd3 for registry.gitlab.com/mffd3s/nswi177/student:latest with digest registry.gitlab.com/mffd3s/nswi177/student@sha256:fa4e8466848c1a97b90e9db29776aac3c8115ad787eac3f2c134b6759e304e09 ...
+$ ./bin/run_tests.sh tasks/11
+1..16
+not ok 1 11/tapsum2json/setup.cfg - Submitted (0)
+# (from function `fail' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/../../nswi177.bash, line 27,
+#  from function `fail_if_missing' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/../../lib/base.bash, line 5,
+#  in test file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 49)
+#   `fail_if_missing' failed
+# 
+# File 11/tapsum2json/setup.cfg was not submitted.
+not ok 2 11/tapsum2json/pyproject.toml - Submitted (0)
+# (from function `fail' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/../../nswi177.bash, line 27,
+#  from function `fail_if_missing' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/../../lib/base.bash, line 5,
+#  in test file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 53)
+#   `fail_if_missing' failed
+# 
+# File 11/tapsum2json/pyproject.toml was not submitted.
+not ok 3 11/tapsum2json/requirements.txt - Submitted (0)
+# (from function `fail' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/../../nswi177.bash, line 27,
+#  from function `fail_if_missing' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/../../lib/base.bash, line 5,
+#  in test file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 57)
+#   `fail_if_missing' failed
+# 
+# File 11/tapsum2json/requirements.txt was not submitted.
+ok 4 11/tapsum2json/setup.cfg - Executable bits (-10) # skip File 11/tapsum2json/setup.cfg was not submitted.
+ok 5 11/tapsum2json/pyproject.toml - Executable bits (-10) # skip File 11/tapsum2json/pyproject.toml was not submitted.
+ok 6 11/tapsum2json/requirements.txt - Executable bits (-10) # skip File 11/tapsum2json/requirements.txt was not submitted.
+not ok 7 11/tapsum2json/setup.cfg - Only reasonable files are committed (10)
+# (from function `fail' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/../../nswi177.bash, line 27,
+#  in test file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 84)
+#   `fail "Found committed virtual env directory in $output."' failed
+# 
+# Found committed virtual env directory in 11/tapsum2json.
+not ok 8 11/tapsum2json/setup.cfg - No input files (10)
+# (from function `assert_status' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/../../lib/assert.bash, line 78,
+#  from function `make_venv_activate_and_install' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 21,
+#  from function `run_it' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 33,
+#  in test file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 100)
+#   `run_it 'no-input' '{' failed
+# 
+# 
+# -- Program exit code mismatch --
+# actual   : 1
+# expected : 0
+# stdout   : Obtaining file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json
+# stderr   : ERROR: file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json does not appear to be a Python project: neither 'setup.py' nor 'pyproject.toml' found.
+# --
+# 
+not ok 9 11/tapsum2json/setup.cfg - Single file, both tests passing (10)
+# (from function `assert_status' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/../../lib/assert.bash, line 78,
+#  from function `make_venv_activate_and_install' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 21,
+#  from function `run_it' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 33,
+#  in test file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 106)
+#   `run_it 'single-file' '{' failed
+# 
+# 
+# -- Program exit code mismatch --
+# actual   : 1
+# expected : 0
+# stdout   : Obtaining file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json
+# stderr   : ERROR: file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json does not appear to be a Python project: neither 'setup.py' nor 'pyproject.toml' found.
+# --
+# 
+not ok 10 11/tapsum2json/setup.cfg - Single non-existent file (10)
+# (from function `assert_status' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/../../lib/assert.bash, line 78,
+#  from function `make_venv_activate_and_install' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 21,
+#  from function `run_it' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 33,
+#  in test file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 120)
+#   `run_it 'single-nonexisting' '{' failed
+# 
+# 
+# -- Program exit code mismatch --
+# actual   : 1
+# expected : 0
+# stdout   : Obtaining file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json
+# stderr   : ERROR: file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json does not appear to be a Python project: neither 'setup.py' nor 'pyproject.toml' found.
+# --
+# 
+not ok 11 11/tapsum2json/setup.cfg - Single file with skipped tests (10)
+# (from function `assert_status' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/../../lib/assert.bash, line 78,
+#  from function `make_venv_activate_and_install' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 21,
+#  from function `run_it' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 33,
+#  in test file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 135)
+#   `run_it 'skipped-tests' '{' failed
+# 
+# 
+# -- Program exit code mismatch --
+# actual   : 1
+# expected : 0
+# stdout   : Obtaining file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json
+# stderr   : ERROR: file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json does not appear to be a Python project: neither 'setup.py' nor 'pyproject.toml' found.
+# --
+# 
+not ok 12 11/tapsum2json/setup.cfg - Single file with another skipped tests (10)
+# (from function `assert_status' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/../../lib/assert.bash, line 78,
+#  from function `make_venv_activate_and_install' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 21,
+#  from function `run_it' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 33,
+#  in test file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 151)
+#   `run_it 'skipped-tests-2' '{' failed
+# 
+# 
+# -- Program exit code mismatch --
+# actual   : 1
+# expected : 0
+# stdout   : Obtaining file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json
+# stderr   : ERROR: file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json does not appear to be a Python project: neither 'setup.py' nor 'pyproject.toml' found.
+# --
+# 
+not ok 13 11/tapsum2json/setup.cfg - Pipeline-like invocation (10)
+# (from function `assert_status' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/../../lib/assert.bash, line 78,
+#  from function `make_venv_activate_and_install' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 21,
+#  from function `run_it' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 33,
+#  in test file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 166)
+#   `run_it 'pipeline' '{' failed
+# 
+# 
+# -- Program exit code mismatch --
+# actual   : 1
+# expected : 0
+# stdout   : Obtaining file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json
+# stderr   : ERROR: file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json does not appear to be a Python project: neither 'setup.py' nor 'pyproject.toml' found.
+# --
+# 
+not ok 14 11/tapsum2json/setup.cfg - Filename with space (10)
+# (from function `assert_status' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/../../lib/assert.bash, line 78,
+#  from function `make_venv_activate_and_install' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 21,
+#  from function `run_it' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 33,
+#  in test file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 197)
+#   `run_it 'filename-with-spaces' '{' failed
+# 
+# 
+# -- Program exit code mismatch --
+# actual   : 1
+# expected : 0
+# stdout   : Obtaining file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json
+# stderr   : ERROR: file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json does not appear to be a Python project: neither 'setup.py' nor 'pyproject.toml' found.
+# --
+# 
+not ok 15 11/tapsum2json/setup.cfg - Filename with quote character (10)
+# (from function `assert_status' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/../../lib/assert.bash, line 78,
+#  from function `make_venv_activate_and_install' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 21,
+#  from function `run_it' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 33,
+#  in test file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 212)
+#   `run_it 'filename-with-quote' '{' failed
+# 
+# 
+# -- Program exit code mismatch --
+# actual   : 1
+# expected : 0
+# stdout   : Obtaining file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json
+# stderr   : ERROR: file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json does not appear to be a Python project: neither 'setup.py' nor 'pyproject.toml' found.
+# --
+# 
+not ok 16 11/tapsum2json/setup.cfg - Test with bail out (10)
+# (from function `assert_status' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/../../lib/assert.bash, line 78,
+#  from function `make_venv_activate_and_install' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 21,
+#  from function `run_it' in file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 33,
+#  in test file /root/.cache/mff_nswi177/tests/repo/tasks/11/tapsum2json.bats, line 228)
+#   `run_it 'bail-out' '{' failed
+# 
+# 
+# -- Program exit code mismatch --
+# actual   : 1
+# expected : 0
+# stdout   : Obtaining file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json
+# stderr   : ERROR: file:///builds/teaching/nswi177/2022/student-bencikb/11/tapsum2json does not appear to be a Python project: neither 'setup.py' nor 'pyproject.toml' found.
+# --
+# 
+Cleaning up project directory and file based variables 00:01
+ERROR: Job failed: exit code 1

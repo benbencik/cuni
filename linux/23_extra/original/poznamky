@@ -1,0 +1,11 @@
+treba sshčknuť portforwarding také veci
+
+skús použiť fsck
+
+lsblk -f | grep mnt → disk image je ext4 → fsck.ext4
+
+fsck.ext4 -p disc_copy niečo opravilo
+
+sudo xdg-open lost+found/'#13' otvorí 2. obrázok
+
+potom som použil photorec a to funguje pekne

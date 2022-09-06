@@ -1,0 +1,6 @@
+root:x:0:0::/root:/bin/bash
+daemon:x:2:3::/:/sbin/nologin
+bin:x:1:2::/:/sbin/nologin
+uuidd:x:68:69::/:/sbin/nologin
+mail:x:12:13::/var/spool/mail:/sbin/nologin
+http:x:33:34::/srv/http:/sbin/nologin

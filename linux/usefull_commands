@@ -1,0 +1,20 @@
+git
+    log - commits
+    diff - differences from last commmit
+    status
+
+bash
+    if <-> fi
+    varibles - always strings
+    cut
+    tr
+    echo $? - exit code
+
+python
+    os.getenv() - read environment variables
+    export VAR - variable will be seen by other programs
+    $(( )) - aritmetic operations need to be enclosed 
+
+ssh
+    ssh-keygen - generate both public and private keys
+    ssh-copy-id - uploading the generated key
