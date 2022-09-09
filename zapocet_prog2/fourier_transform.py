@@ -22,15 +22,20 @@ class Window():
         self.color = {
             'white': pygame.Color(230, 230, 230),
             'dimm_white': pygame.Color(180, 180, 180),
-            'grey': pygame.Color(80, 80, 80),
+            'grey': pygame.Color(100, 100, 100),
             'dark_grey': pygame.Color(40, 40, 40),
             'blue': pygame.Color(40, 0, 240),
             'green': pygame.Color(40, 240, 20),
             'pink': pygame.Color(240, 0, 160)
         }
-        self.color_decay = 0.6
+        self.color_decay = 0.8
+        self.bg_color = self.color['dark_grey']
+        self.curve_color = self.color['pink']
+        self.trace_color = self.color['green']
+        self.font_color = self.color['green']
+
         self.display = pygame.display.set_mode((self.width, self.height))
-        self.display.fill(self.color['dark_grey'])
+        self.display.fill(self.bg_color)
         
     def window_resolution(self, resolution):
         if resolution:
@@ -73,7 +78,7 @@ class Window():
             ]
         ypos = 100
         for i in range(len(message)):
-            text = self.font.render(message[i], True, self.color['green'])
+            text = self.font.render(message[i], True, self.font_color)
             self.display.blit(text, ((self.width - text.get_width())//2, ypos + i*text.get_height()))
 
     def reset(self):
@@ -81,11 +86,10 @@ class Window():
         self.draw_grid()
         self.print_welcome_text()
 
-    def fade_color(self, color, t, tl):
-        # for i in range(len(color)):
-        #     color[i] = int(color[i] * (1 - self.color_decay*((t - i + tl) % tl) / tl))
-            # print(color[i])
-        # return [*(int(color[j] * (1 - self.color_decay*((t - i + tl) % tl) / tl)) for j in range(3))]+[255]
+    def fade_color(self, i, t, tl):
+        a = self.color_decay*((t - i + tl) % tl) / tl
+        color = self.curve_color
+        color = color.lerp(self.bg_color, a)
         return color
 
 class FourierTransform():
@@ -93,7 +97,7 @@ class FourierTransform():
         self.width = w
         self.height = h
 
-        self.number_of_functions = 20
+        self.number_of_functions = 10
         self.t = 0
         self.trace = []
         self.tl = []
@@ -113,6 +117,43 @@ class FourierTransform():
                 num2 = (self.trace[t][0] + self.trace[t][1] * 1j)
                 l.append(num1*num2)
             self.coefficients.append(sum(l)/self.tl)
+    
+    def record_point(self):
+        pos = pygame.mouse.get_pos()
+        if self.trace[-1] != pos:
+            self.trace.append(pos)
+            canvas.display.set_at(pos, canvas.trace_color)
+
+    def calculate_point(self):
+        z = canvas.width//2 + canvas.height//2*1j
+        l = [self.number_of_functions]
+        for r in zip(range(self.number_of_functions+1, 2*self.number_of_functions+1), range(self.number_of_functions-1, -1, -1)):
+            l.append(r[0])
+            l.append(r[1])
+        
+        for i in l:
+            old_z = z
+            z += cmath.exp(2*math.pi*1j*(i-self.number_of_functions)*self.t / self.tl)*self.coefficients[i] 
+            pygame.draw.line(canvas.display, canvas.color['grey'], (old_z.real, old_z.imag), (z.real, z.imag))
+            r = ((old_z.real - z.real)**2 + (old_z.imag - z.imag)**2)**0.5
+            if r > 1:
+                pygame.draw.circle(canvas.display, canvas.color['grey'], (int(old_z.real), int(old_z.imag)), int(r), 1)
+        if len(self.final_trace) < self.tl:
+            self.final_trace.append(z)
+
+    def draw_curve(self):
+        # draw marked points
+        for p in self.trace:
+            canvas.display.set_at((int(p[0]+canvas.width//2), int(p[1]+canvas.height//2)), canvas.trace_color)
+
+        # draw plotted line
+        # treba to uzavrieť
+        for i in range(1, len(self.final_trace)):
+            color = canvas.fade_color(i, self.t, self.tl)
+            p1, p2 = self.final_trace[i-1], self.final_trace[i]
+            pygame.draw.line(canvas.display, color, (int(p1.real), int(p1.imag)), (int(p2.real), int(p2.imag)))
+    
+        self.t = (self.t+1) % self.tl
 
     def reset(self):
         self.trace = []
@@ -129,39 +170,37 @@ args = arg_parser.parse_args()
 
 canvas = Window(args.resolution)
 ft = FourierTransform(canvas.width, canvas.height)
-STATE = 0
+
 """ 
 application might be in 3 different STATEs
 0: idle
 1: drawing
 2: running
 """
-
+STATE = 0
+prev_time = 0  # time of previously marked trace
+SAMPLE_RATE = 0.002  # mark trace every n seconds
 
 if args.input_file:
     paths, attributes, svg_attributes = svgpathtools.svg2paths2(args.input_file)
-    wim = int(float(svg_attributes['width'].replace('mm', ''))*100)
-    him = int(float(svg_attributes['height'].replace('mm', ''))*100)
+    image_w = int(float(svg_attributes['width'].replace('mm', ''))*100)
+    image_h = int(float(svg_attributes['height'].replace('mm', ''))*100)
     STATE = 2
     for idx, attr in enumerate(attributes):
         if attr.get('d') and attr.get('stroke'):
             svgpath = attr['d']
             path = svgpathtools.parse_path(svgpath)
-            line_segments = 40 # number of line segments to draw
+            line_segments = 50 # number of line segments to draw
             for i in range(0, line_segments+1):
                 f = i/line_segments  # will go from 0.0 to 1.0
                 complex_point = path.point(f)  # path.point(t) returns point at 0.0 <= f <= 1.0
-                ft.trace.append((complex_point.real/wim*canvas.height, complex_point.imag/him*canvas.width))
-    print(ft.trace, '-'*200)
+                ft.trace.append((complex_point.real/image_w*canvas.height, complex_point.imag/image_h*canvas.width))
     ft.calculate_coeficients()
-    print(ft.trace)
 else:
     canvas.draw_grid()
     canvas.print_welcome_text()
 
 pygame.display.update()
-prev_time = 0  # time of previously marked trace
-SAMPLE_RATE = 0.02  # mark trace every n seconds
 
 
 while True:
@@ -172,15 +211,13 @@ while True:
         if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
             sys.exit()
         if e.type == pygame.KEYDOWN and e.key == pygame.K_SPACE and STATE < 2:
-            canvas.display.fill(canvas.color['dark_grey'])
+            canvas.display.fill(canvas.bg_color)
             if STATE == 0:
                 canvas.draw_grid() 
                 ft.trace = [pygame.mouse.get_pos()]
                 prev_time = current_time
             if STATE == 1:
-                print(ft.trace, '-'*200)
                 ft.calculate_coeficients()
-                print(ft.trace)
             STATE += 1
         if e.type == pygame.KEYDOWN and e.key == pygame.K_r:
             STATE = 0
@@ -188,46 +225,13 @@ while True:
             ft.reset()
     
     if STATE == 1 and current_time - prev_time >= SAMPLE_RATE:
-        pos = pygame.mouse.get_pos()
         prev_time = current_time
-        if ft.trace[-1] != pos:
-            ft.trace.append(pos)
-            canvas.display.set_at(pos, canvas.color['green'])
-    
+        ft.record_point()
+
     if STATE == 2:
-        time.sleep(0.05)
-        canvas.display.fill(canvas.color['dark_grey'])
-
-        z = canvas.width//2 + canvas.height//2*1j
-        l = [ft.number_of_functions]
-        for r in zip(range(ft.number_of_functions+1, 2*ft.number_of_functions+1), range(ft.number_of_functions-1, -1, -1)):
-            l.append(r[0])
-            l.append(r[1])
+        canvas.display.fill(canvas.bg_color)
+        ft.calculate_point()
+        ft.draw_curve()
         
-        for i in l:
-            old_z = z
-            z += cmath.exp(2*math.pi*1j*(i-ft.number_of_functions)*ft.t / ft.tl)*ft.coefficients[i] 
-            pygame.draw.line(canvas.display, canvas.color['grey'], (old_z.real, old_z.imag), (z.real, z.imag))
-            r = ((old_z.real - z.real)**2 + (old_z.imag - z.imag)**2)**0.5
-            if r > 1:
-                pygame.draw.circle(canvas.display, canvas.color['grey'], (int(old_z.real), int(old_z.imag)), int(r), 1)
-       
-
-        if len(ft.final_trace) < ft.tl:
-            ft.final_trace.append(z)
-        
-        # draw marked points
-        for p in ft.trace:
-            canvas.display.set_at((int(p[0]+canvas.width//2), int(p[1]+canvas.height//2)), canvas.color['green'])
-
-        # draw plotted line
-        # treba to uzavrieť
-        for i in range(1, len(ft.final_trace)):
-            color = canvas.fade_color(canvas.color['pink'], ft.t, ft.tl)
-            p1, p2 = ft.final_trace[i-1], ft.final_trace[i]
-            pygame.draw.line(canvas.display, color, (int(p1.real), int(p1.imag)), (int(p2.real), int(p2.imag)))
-    
-        ft.t = (ft.t+1) % ft.tl
-
     pygame.display.update()
         
