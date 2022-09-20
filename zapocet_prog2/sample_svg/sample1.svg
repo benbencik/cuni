@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.2" width="279.4mm" height="215.9mm" viewBox="0 0 27940 21590" preserveAspectRatio="xMidYMid" fill-rule="evenodd" stroke-width="28.222" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" xmlns:ooo="http://xml.openoffice.org/svg/export" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:presentation="http://sun.com/xmlns/staroffice/presentation" xmlns:smil="http://www.w3.org/2001/SMIL20/" xmlns:anim="urn:oasis:names:tc:opendocument:xmlns:animation:1.0" xml:space="preserve">
+<svg version="1.2" width="216.16mm" height="279.66mm" viewBox="0 0 21616 27966" preserveAspectRatio="xMidYMid" fill-rule="evenodd" stroke-width="28.222" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" xmlns:ooo="http://xml.openoffice.org/svg/export" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:presentation="http://sun.com/xmlns/staroffice/presentation" xmlns:smil="http://www.w3.org/2001/SMIL20/" xmlns:anim="urn:oasis:names:tc:opendocument:xmlns:animation:1.0" xml:space="preserve">
  <defs class="ClipPathGroup">
   <clipPath id="presentation_clip_path" clipPathUnits="userSpaceOnUse">
-   <rect x="0" y="0" width="27940" height="21590"/>
+   <rect x="0" y="0" width="21616" height="27966"/>
   </clipPath>
   <clipPath id="presentation_clip_path_shrink" clipPathUnits="userSpaceOnUse">
-   <rect x="27" y="21" width="27885" height="21547"/>
+   <rect x="21" y="27" width="21573" height="27911"/>
   </clipPath>
  </defs>
  <defs class="TextShapeIndex">
-  <g ooo:slide="id1" ooo:id-list="id3"/>
+  <g ooo:slide="id1" ooo:id-list="id3 id4"/>
  </defs>
  <defs class="EmbeddedBulletChars">
   <g id="bullet-char-template-57356" transform="scale(0.00048828125,-0.00048828125)">
@@ -55,11 +55,16 @@
    <g id="container-id1">
     <g id="id1" class="Slide" clip-path="url(#presentation_clip_path)">
      <g class="Page">
-      <g class="com.sun.star.drawing.CustomShape">
+      <g class="com.sun.star.drawing.OpenFreeHandShape">
        <g id="id3">
-        <rect class="BoundingBox" stroke="none" fill="none" x="7300" y="6031" width="10799" height="7942"/>
-        <path fill="rgb(114,159,207)" stroke="none" d="M 18097,10002 C 18097,10698 17848,11383 17374,11986 16900,12590 16219,13091 15398,13439 14577,13788 13647,13971 12699,13971 11751,13971 10821,13788 10000,13439 9179,13091 8498,12590 8024,11986 7550,11383 7301,10698 7301,10002 7301,9305 7550,8620 8024,8017 8498,7413 9179,6912 10000,6564 10821,6215 11751,6032 12699,6032 13647,6032 14577,6215 15398,6564 16219,6912 16900,7413 17374,8017 17848,8620 18097,9305 18097,10001 L 18097,10002 Z"/>
-        <path fill="none" stroke="rgb(52,101,164)" d="M 18097,10002 C 18097,10698 17848,11383 17374,11986 16900,12590 16219,13091 15398,13439 14577,13788 13647,13971 12699,13971 11751,13971 10821,13788 10000,13439 9179,13091 8498,12590 8024,11986 7550,11383 7301,10698 7301,10002 7301,9305 7550,8620 8024,8017 8498,7413 9179,6912 10000,6564 10821,6215 11751,6032 12699,6032 13647,6032 14577,6215 15398,6564 16219,6912 16900,7413 17374,8017 17848,8620 18097,9305 18097,10001 L 18097,10002 Z"/>
+        <rect class="BoundingBox" stroke="none" fill="none" x="9857" y="8702" width="4735" height="8351"/>
+        <path fill="none" stroke="rgb(52,101,164)" d="M 9858,10849 C 10124,10300 10341,9715 10753,9251 11077,8888 11550,8575 12155,8756 12725,8926 13253,9164 13753,9441 14294,9741 14758,10330 14531,11001 14368,11486 14212,11970 14026,12447 13832,12942 13536,13408 13129,13741 12587,14185 12028,14627 11610,15186 11341,15546 11178,15973 11065,16404 L 11026,16822 11065,17051"/>
+       </g>
+      </g>
+      <g class="com.sun.star.drawing.OpenFreeHandShape">
+       <g id="id4">
+        <rect class="BoundingBox" stroke="none" fill="none" x="5365" y="9330" width="5663" height="7419"/>
+        <path fill="none" stroke="rgb(52,101,164)" d="M 9897,10925 C 9664,10407 9164,10055 8650,9822 8215,9624 7766,9465 7288,9366 6671,9237 6047,9481 5691,9898 5400,10238 5332,10731 5379,11192 5434,11723 5628,12235 5963,12638 6439,13208 7127,13567 7755,13969 8258,14290 8802,14536 9313,14844 9795,15136 10165,15560 10598,15910 L 10871,16329 11026,16747 11026,16747"/>
        </g>
       </g>
      </g>
