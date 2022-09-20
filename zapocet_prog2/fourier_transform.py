@@ -14,7 +14,7 @@ class Window():
     def __init__(self, resolution) -> None:
         pygame.init()
         pygame.font.init()
-        self.font = pygame.font.SysFont('Courier New', 30)
+        self.font = pygame.font.SysFont('Courier New', 15)
         self.width, self.height = self.window_resolution(resolution)
         self.grid_size = 240  # space betweeen solid lines
         self.dash_separation = 60  # space between dash lines
@@ -28,7 +28,7 @@ class Window():
             'green': pygame.Color(40, 240, 20),
             'pink': pygame.Color(240, 0, 160)
         }
-        self.color_decay = 0.8
+        self.color_decay = 0.98
         self.bg_color = self.color['dark_grey']
         self.curve_color = self.color['pink']
         self.trace_color = self.color['green']
@@ -76,7 +76,7 @@ class Window():
             'press ESC to exit',
             'press R to reset'
             ]
-        ypos = 100
+        ypos = canvas.height // 2 - 100
         for i in range(len(message)):
             text = self.font.render(message[i], True, self.font_color)
             self.display.blit(text, ((self.width - text.get_width())//2, ypos + i*text.get_height()))
@@ -87,22 +87,27 @@ class Window():
         self.print_welcome_text()
 
     def fade_color(self, i, t, tl):
-        a = self.color_decay*((t - i + tl) % tl) / tl
-        color = self.curve_color
-        color = color.lerp(self.bg_color, a)
-        return color
+        instensity = (t - i + tl) % tl
+        alpha = self.color_decay * instensity / tl
+        return self.curve_color.lerp(self.bg_color, alpha)
+
 
 class FourierTransform():
     def __init__(self, w, h):
         self.width = w
         self.height = h
 
-        self.number_of_functions = 10
+        self.number_of_functions = 250
+    
         self.t = 0
         self.trace = []
         self.tl = []
         self.final_trace = []
         self.coefficients = []
+
+        self.center = [0, 0]
+        self.follow = True
+        self.zoom = 100
 
     def calculate_coeficients(self):
         self.tl = len(self.trace)
@@ -133,27 +138,42 @@ class FourierTransform():
         
         for i in l:
             old_z = z
-            z += cmath.exp(2*math.pi*1j*(i-self.number_of_functions)*self.t / self.tl)*self.coefficients[i] 
+            z += cmath.exp(2*math.pi*1j*(i-self.number_of_functions)*self.t / self.tl)*self.coefficients[i]
             pygame.draw.line(canvas.display, canvas.color['grey'], (old_z.real, old_z.imag), (z.real, z.imag))
             r = ((old_z.real - z.real)**2 + (old_z.imag - z.imag)**2)**0.5
             if r > 1:
                 pygame.draw.circle(canvas.display, canvas.color['grey'], (int(old_z.real), int(old_z.imag)), int(r), 1)
+
+        self.center = [z.real, z.imag]
         if len(self.final_trace) < self.tl:
             self.final_trace.append(z)
 
     def draw_curve(self):
-        # draw marked points
-        for p in self.trace:
-            canvas.display.set_at((int(p[0]+canvas.width//2), int(p[1]+canvas.height//2)), canvas.trace_color)
-
         # draw plotted line
         # treba to uzavrieť
         for i in range(1, len(self.final_trace)):
             color = canvas.fade_color(i, self.t, self.tl)
             p1, p2 = self.final_trace[i-1], self.final_trace[i]
             pygame.draw.line(canvas.display, color, (int(p1.real), int(p1.imag)), (int(p2.real), int(p2.imag)))
-    
+
+        # draw marked points
+        for p in self.trace:
+            # if self.follow:
+            #     x, y = self.zoom_points(p[0], p[1])
+            # else:
+            x = p[0]
+            y = p[1]
+            canvas.display.set_at((int(x+canvas.width/2), int(y+canvas.height/2)), canvas.trace_color)
+
         self.t = (self.t+1) % self.tl
+
+    def zoom_points(self, x, y):
+        slope = (self.center[0] - x) / (self.center[1] - y)
+        offset = y - slope*x
+        # if x > self.center[0]: x += self.zoom
+        # else: x -= self.zoom
+        x += self.zoom
+        return x, x*slope+offset
 
     def reset(self):
         self.trace = []
@@ -190,7 +210,7 @@ if args.input_file:
         if attr.get('d') and attr.get('stroke'):
             svgpath = attr['d']
             path = svgpathtools.parse_path(svgpath)
-            line_segments = 50 # number of line segments to draw
+            line_segments = 100 # number of line segments to draw
             for i in range(0, line_segments+1):
                 f = i/line_segments  # will go from 0.0 to 1.0
                 complex_point = path.point(f)  # path.point(t) returns point at 0.0 <= f <= 1.0
@@ -229,9 +249,11 @@ while True:
         ft.record_point()
 
     if STATE == 2:
+        time.sleep(0.05)
         canvas.display.fill(canvas.bg_color)
         ft.calculate_point()
         ft.draw_curve()
         
     pygame.display.update()
-        
+
+# zoom needs to be recalculated in every itteration
