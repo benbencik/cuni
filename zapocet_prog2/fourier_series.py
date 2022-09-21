@@ -1,20 +1,19 @@
 #!/usr/bin/python
 
-import argparse
-import pygame
 import sys
 import time
-import math
 import cmath
+import pygame
+import argparse
 import svgpathtools
-import svgutils
+
 
 
 class Window():
     def __init__(self, resolution) -> None:
         pygame.init()
         pygame.font.init()
-        self.font = pygame.font.SysFont('Courier New', 15)
+        self.font = pygame.font.SysFont('Courier New', 20)
         self.width, self.height = self.window_resolution(resolution)
         self.grid_size = 240  # space betweeen solid lines
         self.dash_separation = 60  # space between dash lines
@@ -28,7 +27,7 @@ class Window():
             'green': pygame.Color(40, 240, 20),
             'pink': pygame.Color(240, 0, 160)
         }
-        self.color_decay = 0.98
+        self.color_decay = 0.8
         self.bg_color = self.color['dark_grey']
         self.curve_color = self.color['pink']
         self.trace_color = self.color['green']
@@ -68,10 +67,10 @@ class Window():
     def print_welcome_text(self):
         message = [
             'press SPACE to start/stop drawing',
-            'press ESC to exit',
-            'press R to reset'
+            'ESC to exit R to reset',
+            'C, L, P to toggle circles, lines, points'
         ]
-        ypos = canvas.height // 2
+        ypos = canvas.height // 2 - 50
         for i in range(len(message)):
             text = self.font.render(message[i], True, self.font_color)
             self.display.blit(
@@ -82,9 +81,9 @@ class Window():
         self.draw_grid()
         self.print_welcome_text()
 
-    def fade_color(self, i, t, tl):
-        instensity = (t - i + tl) % tl
-        alpha = self.color_decay * instensity / tl
+    def fade_color(self, i, ttime, trace_len):
+        instensity = (ttime - i) % trace_len
+        alpha = self.color_decay * instensity / trace_len
         return self.curve_color.lerp(self.bg_color, alpha)
 
 
@@ -92,31 +91,112 @@ class FourierTransform():
     def __init__(self, w, h, n):
         self.width = w
         self.height = h
-        self.number_of_functions = n//2
+        self.n = n // 2  # number of functions
 
-        self.t = 0
+        self.time = 0
         self.trace = []
-        self.tl = []
-        self.final_trace = []
+        self.aprox_trace = []
         self.coefficients = []
+        self.draw_last_line = False
 
-        self.center = [0, 0]
-        self.follow = True
-        self.zoom = 100
+        self.toggle_lines = True
+        self.toggle_circles = True
+        self.toggle_points = True
+        self.zoom = 1
+        self.center = [canvas.width//2, canvas.height//2]
+        self.offset = [0, 0]
 
     def calculate_coeficients(self):
-        self.tl = len(self.trace)
-        for i in range(self.tl):
+        # condition needs to be satisfied otherwise the algorithm malfunctions
+        # for higher percision increase number of points traced
+        if len(self.trace) < self.n*2: self.n = len(self.trace)//2 
+
+        # transpose points 
+        for i in range(len(self.trace)):
             x, y = self.trace[i]
             self.trace[i] = (x-canvas.width//2, y-canvas.height//2)
+
+        # coeficients deretmine initial angle and magnitude
         self.coefficients = []
-        for i in range(ft.number_of_functions, -ft.number_of_functions-1, -1):
+        for freq in range(self.n, -self.n-1, -1):
             l = []
-            for t in range(self.tl):
-                num1 = cmath.exp(2*math.pi * 1j * i * t/self.tl)
+            for t in range(len(self.trace)):
+                num1 = cmath.exp(2*cmath.pi * 1j * freq * t/len(self.trace))
                 num2 = (self.trace[t][0] + self.trace[t][1] * 1j)
                 l.append(num1*num2)
-            self.coefficients.append(sum(l)/self.tl)
+            self.coefficients.append(sum(l)/len(self.trace))
+
+    def calculate_point(self):
+        z = canvas.width//2 + canvas.height//2*1j
+        
+        # zip together frequencies by positive negative pairs
+        frequency = [0]
+        neg_range = range(-1, -self.n-1, -1)
+        pos_range = range(1, self.n+1)
+        for r in zip(neg_range, pos_range): frequency += r
+
+        for freq in frequency:
+            old_z = z
+            # coeficient defining stgarting angle and magnitude
+            complex_coef = self.coefficients[freq+self.n]
+            ttime = self.time / len(self.trace)
+            # add new function to resulting complex point
+            z += complex_coef * cmath.exp(freq * ttime * 2*cmath.pi*1j)
+            
+            # draw resulting vector
+            x1, y1 = self.zoom_point(old_z.real, old_z.imag)
+            x2, y2 = self.zoom_point(z.real, z.imag)
+            if self.toggle_lines:
+                pygame.draw.line(canvas.display, canvas.color['grey'], 
+                                (x1, y1), (x2, y2))
+            # if self.toggle_lines:
+            #     pygame.draw.line(canvas.display, canvas.color['grey'], 
+            #                     (old_z.real, old_z.imag), (z.real, z.imag))
+            
+            if self.toggle_circles:
+                r = cmath.sqrt((x1 - x2)**2 + (y1 - y2)**2).real
+                if r > 1:
+                    pygame.draw.circle(canvas.display, canvas.color['grey'], 
+                                    (int(x1), int(y1)), int(r), 1)
+
+            # draw circle described by the vector above
+            # if self.toggle_circles:
+            #     r = cmath.sqrt((old_z.real - z.real)**2 + (old_z.imag - z.imag)**2).real
+            #     if r > 1:
+            #         pygame.draw.circle(canvas.display, canvas.color['grey'], 
+            #                         (int(old_z.real), int(old_z.imag)), int(r), 1)
+        self.center = [z.real, z.imag]
+        self.offset = [self.center[0]-canvas.width/2, self.center[1]-canvas.height/2]
+        if len(self.aprox_trace) < len(self.trace): self.aprox_trace.append(z)
+
+    def draw_curve(self):
+        range_end = len(self.aprox_trace)
+        if self.draw_last_line:
+            range_end = len(self.aprox_trace)+1
+        elif self.time == len(self.trace)-1:
+            self.draw_last_line = True
+        
+        # draw approximated curve
+        for i in range(1, range_end):
+            color = canvas.fade_color(i, self.time, len(self.trace))
+            # p1, p2 = self.aprox_trace[i-1], self.aprox_trace[i%len(self.aprox_trace)]
+            x1, y1 = self.zoom_point(self.aprox_trace[i-1].real, self.aprox_trace[i-1].imag)
+            x2, y2 = self.zoom_point(self.aprox_trace[i%len(self.aprox_trace)].real, self.aprox_trace[i%len(self.aprox_trace)].imag)       
+            pygame.draw.line(canvas.display, color, (int(x1), int(y1)), (int(x2), int(y2)))
+
+        # draw traced points
+        if self.toggle_points:
+            for p in self.trace:
+                x, y = int(p[0]+canvas.width/2), int(p[1]+canvas.height/2)
+                canvas.display.set_at((x, y), canvas.trace_color)
+
+        self.time = (self.time+1) % len(self.trace)
+    
+    def zoom_point(self, x, y):
+        x = self.center[0]*(1 - self.zoom) + x * self.zoom #+ self.offset[0]
+        y = self.center[1]*(1 - self.zoom) + y * self.zoom #+ self.offset[1]
+        return x, y
+        
 
     def record_point(self):
         pos = pygame.mouse.get_pos()
@@ -124,72 +204,41 @@ class FourierTransform():
             self.trace.append(pos)
             canvas.display.set_at(pos, canvas.trace_color)
 
-    def calculate_point(self):
-        z = canvas.width//2 + canvas.height//2*1j
-        l = [self.number_of_functions]
-        for r in zip(range(self.number_of_functions+1, 2*self.number_of_functions+1), range(self.number_of_functions-1, -1, -1)):
-            l.append(r[0])
-            l.append(r[1])
-
-        for i in l:
-            old_z = z
-            z += cmath.exp(2*math.pi*1j*(i-self.number_of_functions)
-                           * self.t / self.tl)*self.coefficients[i]
-            pygame.draw.line(
-                canvas.display, canvas.color['grey'], (old_z.real, old_z.imag), (z.real, z.imag))
-            r = ((old_z.real - z.real)**2 + (old_z.imag - z.imag)**2)**0.5
-            if r > 1:
-                pygame.draw.circle(canvas.display, canvas.color['grey'], (int(
-                    old_z.real), int(old_z.imag)), int(r), 1)
-
-        self.center = [z.real, z.imag]
-        if len(self.final_trace) < self.tl:
-            self.final_trace.append(z)
-
-    def draw_curve(self):
-        # draw plotted line
-        # treba to uzavrieť
-        for i in range(1, len(self.final_trace)):
-            color = canvas.fade_color(i, self.t, self.tl)
-            p1, p2 = self.final_trace[i-1], self.final_trace[i]
-            pygame.draw.line(canvas.display, color, (int(
-                p1.real), int(p1.imag)), (int(p2.real), int(p2.imag)))
-
-        # draw marked points
-        for p in self.trace:
-            x = p[0]
-            y = p[1]
-            canvas.display.set_at(
-                (int(x+canvas.width/2), int(y+canvas.height/2)), canvas.trace_color)
-
-        self.t = (self.t+1) % self.tl
-
-    def zoom_points(self, x, y):
-        slope = (self.center[0] - x) / (self.center[1] - y)
-        offset = y - slope*x
-        # if x > self.center[0]: x += self.zoom
-        # else: x -= self.zoom
-        x += self.zoom
-        return x, x*slope+offset
-
     def reset(self):
         self.trace = []
-        self.final_trace = []
+        self.aprox_trace = []
         self.coefficients = []
-        self.t = 0
+        self.time = 0
+        self.draw_last_line = False
+        self.zoom = 1
 
+
+def extract_svg():
+    paths, attributes, svg_attributes = svgpathtools.svg2paths2(args.input_file)
+    image_w, image_h = map(int, svg_attributes['viewBox'].split(' ')[2:])
+    
+    for attr in attributes:
+        # extracting only the features wich are strokes
+        if attr.get('d') and attr.get('stroke'):
+            svgpath = attr['d']
+            path = svgpathtools.parse_path(svgpath)
+            POINTS_PER_PATH = args.point_density
+            
+            # sample points from the line
+            for i in range(0, POINTS_PER_PATH+1):
+                f = i/POINTS_PER_PATH
+                complex_point = path.point(f)
+                # append points transposed to canvas size
+                ft.trace.append((complex_point.real/image_w*canvas.width,
+                                complex_point.imag/image_h*canvas.height))
 
 arg_parser = argparse.ArgumentParser()
-arg_parser.add_argument('-r', '--resolution', nargs=2,
-                        help='set width and height of the window')
-arg_parser.add_argument('-i', '--input-file', type=str,
-                        help='specify a .svg file for trace')
-arg_parser.add_argument('-n', '--num-of-functions', type=int, default=100,
-                        help='number of functions used to approximate the curve')
-arg_parser.add_argument('-s', '--sampling-rate', type=int,
-                        default=100, help='mark trace of curve every n miliseconds')
-arg_parser.add_argument('-u', '--update-rate', type=int,
-                        default=50, help='one frame will take n miliseconds')
+arg_parser.add_argument('-r', '--resolution', nargs=2, help='set width and height of the window, default is fullscreen')
+arg_parser.add_argument('-i', '--input-file', type=str, help='specify a .svg file for trace')
+arg_parser.add_argument('-n', '--num-of-functions', type=int, default=100, help='number of functions used to approximate the curve')
+arg_parser.add_argument('-s', '--sampling-rate', type=int, default=100, help='mark trace of curve every n miliseconds')
+arg_parser.add_argument('-u', '--update-rate', type=int, default=50, help='one frame will take n miliseconds')
+arg_parser.add_argument('-d', '--point-density', type=int, default=200, help='number of point samples per path')
 args = arg_parser.parse_args()
 
 canvas = Window(args.resolution)
@@ -202,40 +251,22 @@ application might be in 3 different STATEs
 2: running
 """
 STATE = 0
-prev_time = 0  # time of previously marked trace
 SAMPLE_RATE = args.sampling_rate / 10e3  # mark trace every n miliseconds
-UPDATE_RATE = args.update_rate / 10e3  # move through time everty n miliseconds
+UPDATE_RATE = args.update_rate / 10e2  # move through time everty n miliseconds
 
 if args.input_file: 
-    paths, attributes, svg_attributes = svgpathtools.svg2paths2(args.input_file)
-    image_w, image_h = map(int, svg_attributes['viewBox'].split(' ')[2:])
-    
-    STATE = 2
-    for idx, attr in enumerate(attributes):
-        # extracting only the features wich are strokes
-        if attr.get('d') and attr.get('stroke'):
-            svgpath = attr['d']
-            path = svgpathtools.parse_path(svgpath)
-            LINE_SEGMENTS = 100  # number of line segments to draw
-            
-            # sample points from the line
-            for i in range(0, LINE_SEGMENTS+1):
-                f = i/LINE_SEGMENTS
-                complex_point = path.point(f)
-                # append points transposed to canvas size
-                ft.trace.append((complex_point.real/image_w*canvas.width,
-                                complex_point.imag/image_h*canvas.height))
+    extract_svg()
     ft.calculate_coeficients()
+    STATE = 2  # trace is recorded skip 1 state
 else:
     canvas.draw_grid()
     canvas.print_welcome_text()
+    pygame.display.update()
 
-pygame.display.update()
 
-
+prev_time, current_time = 0, 0
 while True:
     current_time = time.monotonic()
-
     # catch events
     for e in pygame.event.get():
         if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
@@ -253,6 +284,18 @@ while True:
             STATE = 0
             canvas.reset()
             ft.reset()
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_p:
+            ft.toggle_points = not ft.toggle_points
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_l:
+            ft.toggle_lines = not ft.toggle_lines
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_c:
+            ft.toggle_circles = not ft.toggle_circles
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_z:
+            ft.zoom += 0.1
+            print(ft.zoom)
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_x:
+            ft.zoom -= 0.1
+            print(ft.zoom)
 
     if STATE == 1 and current_time - prev_time >= SAMPLE_RATE:
         prev_time = current_time
