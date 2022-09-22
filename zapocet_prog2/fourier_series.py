@@ -67,11 +67,12 @@ class Window():
 
     def print_welcome_text(self):
         message = [
+            'C, L, P to toggle circles, lines, points',
             'press SPACE to start/stop drawing',
             'ESC to exit R to reset',
-            'C, L, P to toggle circles, lines, points'
+            'z/x to zoom in/out'
         ]
-        ypos = canvas.height // 2 - 50
+        ypos = canvas.height // 2 - 100
         for i in range(len(message)):
             text = self.font.render(message[i], True, self.font_color)
             self.display.blit(
@@ -79,7 +80,7 @@ class Window():
 
     def print_zoom(self, num):
         text = self.font_info.render(f"Zoom: {round(num, 2)}", True, self.font_color)
-        self.display.blit(text, (20, 20))
+        self.display.blit(text, (20, self.width/30))
 
     def reset(self):
         self.display.fill(canvas.color['dark_grey'])
@@ -149,27 +150,17 @@ class FourierTransform():
             z += complex_coef * cmath.exp(freq * ttime * 2*cmath.pi*1j)
             
             # draw resulting vector
-            x1, y1 = self.zoom_point(old_z.real, old_z.imag)
-            x2, y2 = self.zoom_point(z.real, z.imag)
+            p1 = self.zoom_point(old_z)
+            p2 = self.zoom_point(z)
             if self.toggle_lines:
                 pygame.draw.line(canvas.display, canvas.color['grey'], 
-                                (x1, y1), (x2, y2))
-            # if self.toggle_lines:
-            #     pygame.draw.line(canvas.display, canvas.color['grey'], 
-            #                     (old_z.real, old_z.imag), (z.real, z.imag))
-            
+                                (int(p1.real), int(p1.imag)), (int(p2.real), int(p2.imag))) 
             if self.toggle_circles:
-                r = cmath.sqrt((x1 - x2)**2 + (y1 - y2)**2).real
+                r = cmath.sqrt((p1.real - p2.real)**2 + (p1.imag - p2.imag)**2).real
                 if r > 1:
                     pygame.draw.circle(canvas.display, canvas.color['grey'], 
-                                    (int(x1), int(y1)), int(r), 1)
+                                    (int(p1.real), int(p1.imag)), int(r), 1)
 
-            # draw circle described by the vector above
-            # if self.toggle_circles:
-            #     r = cmath.sqrt((old_z.real - z.real)**2 + (old_z.imag - z.imag)**2).real
-            #     if r > 1:
-            #         pygame.draw.circle(canvas.display, canvas.color['grey'], 
-            #                         (int(old_z.real), int(old_z.imag)), int(r), 1)
         self.center = [z.real, z.imag]
         self.offset = [self.center[0]-canvas.width/2, self.center[1]-canvas.height/2]
         if len(self.aprox_trace) < len(self.trace): self.aprox_trace.append(z)
@@ -184,23 +175,21 @@ class FourierTransform():
         # draw approximated curve
         for i in range(1, range_end):
             color = canvas.fade_color(i, self.time, len(self.trace))
-            # p1, p2 = self.aprox_trace[i-1], self.aprox_trace[i%len(self.aprox_trace)]
-            x1, y1 = self.zoom_point(self.aprox_trace[i-1].real, self.aprox_trace[i-1].imag)
-            x2, y2 = self.zoom_point(self.aprox_trace[i%len(self.aprox_trace)].real, self.aprox_trace[i%len(self.aprox_trace)].imag)       
-            pygame.draw.line(canvas.display, color, (int(x1), int(y1)), (int(x2), int(y2)))
+            p1 = self.zoom_point(self.aprox_trace[i-1])
+            p2 = self.zoom_point(self.aprox_trace[i%len(self.aprox_trace)])       
+            pygame.draw.line(canvas.display, color, (int(p1.real), int(p1.imag)), (int(p2.real), int(p2.imag)))
 
         # draw traced points
         if self.toggle_points:
             for p in self.trace:
-                x, y = int(p[0]+canvas.width/2), int(p[1]+canvas.height/2)
-                canvas.display.set_at((x, y), canvas.trace_color)
+                p = self.zoom_point(p[0]+canvas.width/2 + 1j*(p[1]+canvas.height/2))
+                canvas.display.set_at((int(p.real), int(p.imag)), canvas.trace_color)
 
         self.time = (self.time+1) % len(self.trace)
     
-    def zoom_point(self, x, y):
-        x = self.center[0]*(1 - self.zoom) + x * self.zoom #+ self.offset[0]
-        y = self.center[1]*(1 - self.zoom) + y * self.zoom #+ self.offset[1]
-        return x, y
+    def zoom_point(self, point):
+        if self.zoom == 1: return point
+        return (self.center[0]*(1 - self.zoom) + point.real * self.zoom) + 1j*(self.center[1]*(1 - self.zoom) + point.imag * self.zoom)
         
 
     def record_point(self):
@@ -320,10 +309,12 @@ while True:
         if ft.zoom - zoom_amount > 0:
             ft.zoom -= zoom_amount
 
+    # drawing points
     if STATE == 1 and current_time - prev_time >= SAMPLE_RATE:
         prev_time = current_time
         ft.record_point()
 
+    # run animation
     if STATE == 2 and current_time - prev_time >= UPDATE_RATE:
         prev_time = current_time
         canvas.display.fill(canvas.bg_color)
@@ -332,5 +323,3 @@ while True:
         ft.draw_curve()
 
     pygame.display.update()
-
-# zoom needs to be recalculated in every itteration
