@@ -14,6 +14,7 @@ class Window():
         pygame.init()
         pygame.font.init()
         self.font = pygame.font.SysFont('Courier New', 20)
+        self.font_info = pygame.font.SysFont('Courier New', 15)
         self.width, self.height = self.window_resolution(resolution)
         self.grid_size = 240  # space betweeen solid lines
         self.dash_separation = 60  # space between dash lines
@@ -75,6 +76,10 @@ class Window():
             text = self.font.render(message[i], True, self.font_color)
             self.display.blit(
                 text, ((self.width - text.get_width())//2, ypos + i*text.get_height()))
+
+    def print_zoom(self, num):
+        text = self.font_info.render(f"Zoom: {round(num, 2)}", True, self.font_color)
+        self.display.blit(text, (20, 20))
 
     def reset(self):
         self.display.fill(canvas.color['dark_grey'])
@@ -253,6 +258,7 @@ application might be in 3 different STATEs
 STATE = 0
 SAMPLE_RATE = args.sampling_rate / 10e3  # mark trace every n miliseconds
 UPDATE_RATE = args.update_rate / 10e2  # move through time everty n miliseconds
+HOLD_AFTER = 0.5  # hold the zoom keys after n seconds
 
 if args.input_file: 
     extract_svg()
@@ -265,37 +271,54 @@ else:
 
 
 prev_time, current_time = 0, 0
+press_z, press_x = -1, -1  # last time when key was pressed
+zoom_amount = 0.01
+
 while True:
     current_time = time.monotonic()
     # catch events
     for e in pygame.event.get():
-        if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
-            sys.exit()
-        if e.type == pygame.KEYDOWN and e.key == pygame.K_SPACE and STATE < 2:
-            canvas.display.fill(canvas.bg_color)
-            if STATE == 0:
-                canvas.draw_grid()
-                ft.trace = [pygame.mouse.get_pos()]
-                prev_time = current_time
-            if STATE == 1:
-                ft.calculate_coeficients()
-            STATE += 1
-        if e.type == pygame.KEYDOWN and e.key == pygame.K_r:
-            STATE = 0
-            canvas.reset()
-            ft.reset()
-        if e.type == pygame.KEYDOWN and e.key == pygame.K_p:
-            ft.toggle_points = not ft.toggle_points
-        if e.type == pygame.KEYDOWN and e.key == pygame.K_l:
-            ft.toggle_lines = not ft.toggle_lines
-        if e.type == pygame.KEYDOWN and e.key == pygame.K_c:
-            ft.toggle_circles = not ft.toggle_circles
-        if e.type == pygame.KEYDOWN and e.key == pygame.K_z:
-            ft.zoom += 0.1
-            print(ft.zoom)
-        if e.type == pygame.KEYDOWN and e.key == pygame.K_x:
-            ft.zoom -= 0.1
-            print(ft.zoom)
+        if e.type == pygame.KEYDOWN:
+            if e.key == pygame.K_ESCAPE:
+                sys.exit()
+            if e.key == pygame.K_SPACE and STATE < 2:
+                canvas.display.fill(canvas.bg_color)
+                if STATE == 0:
+                    canvas.draw_grid()
+                    ft.trace = [pygame.mouse.get_pos()]
+                    prev_time = current_time
+                if STATE == 1:
+                    ft.calculate_coeficients()
+                STATE += 1
+            if e.key == pygame.K_r:
+                STATE = 0
+                canvas.reset()
+                ft.reset()
+            if e.key == pygame.K_p:
+                ft.toggle_points = not ft.toggle_points
+            if e.key == pygame.K_l:
+                ft.toggle_lines = not ft.toggle_lines
+            if e.key == pygame.K_c:
+                ft.toggle_circles = not ft.toggle_circles
+            if e.key == pygame.K_z:
+                ft.zoom += zoom_amount
+                press_z = current_time
+            if e.key == pygame.K_x:
+                if ft.zoom - zoom_amount > 0:
+                    ft.zoom -= zoom_amount
+                press_x = current_time
+        elif e.type == pygame.KEYUP:
+            if e.key == pygame.K_z:
+                press_z = -1
+            if e.key == pygame.K_x:
+                press_x = -1
+    
+    #  hold the key
+    if press_z > 0 and current_time - press_z > HOLD_AFTER:
+        ft.zoom += zoom_amount
+    if press_x > 0 and current_time - press_x > HOLD_AFTER:
+        if ft.zoom - zoom_amount > 0:
+            ft.zoom -= zoom_amount
 
     if STATE == 1 and current_time - prev_time >= SAMPLE_RATE:
         prev_time = current_time
@@ -304,6 +327,7 @@ while True:
     if STATE == 2 and current_time - prev_time >= UPDATE_RATE:
         prev_time = current_time
         canvas.display.fill(canvas.bg_color)
+        canvas.print_zoom(ft.zoom)
         ft.calculate_point()
         ft.draw_curve()
 
