@@ -71,16 +71,23 @@ class Window():
             'ESC to exit R to reset',
             '↑/↓ to zoom in/out'
         ]
-        ypos = canvas.height // 2 - 100
+        ypos = self.height // 2 - 100
         for i in range(len(message)):
             text = self.font.render(message[i], True, self.font_color)
             self.display.blit(
                 text, ((self.width - text.get_width())//2, ypos + i*text.get_height()))
 
-    def print_zoom(self, num):
-        text = self.font_info.render(
-            f"Zoom: {round(num, 2)}", True, self.font_color)
-        self.display.blit(text, (20, self.width/30))
+    def print_stats(self, scale, vectors):
+        for a in arrows:
+            if a['key'] in [pygame.K_UP, pygame.K_DOWN]:
+                scale += a['delta']
+            else:
+                vectors += a['delta']
+        message = [f"Zoom: {round(scale, 2)}", f"#Vectors: {vectors*2}"]
+        xpos, ypos = 20, self.width/30
+        for i in range(len(message)):
+            text = self.font.render(message[i], True, self.font_color)
+            self.display.blit(text, ((xpos, ypos + i*text.get_height())))
 
     def reset(self):
         self.display.fill(canvas.color['dark_grey'])
@@ -112,6 +119,7 @@ class FourierTransform():
         self.zoom = 1
         self.center = [canvas.width//2, canvas.height//2]
         self.offset = [0, 0]
+        self.ttt = 0
 
     def calculate_coeficients(self):
         self.trace_l = len(self.trace)
@@ -120,16 +128,10 @@ class FourierTransform():
         if self.trace_l < self.n*2:
             self.n = self.trace_l//2
 
-        # transpose points
-        for i in range(self.trace_l):
-            x, y = self.trace[i]
-            self.trace[i] = (x-canvas.width//2, y-canvas.height//2)
-
         # coeficients deretmine initial angle and magnitude
         self.coefficients = []
         # for k in range(self.n, -self.n-1, -1):
         for k in range(-self.n, self.n+1):
-            print(k)
             sum_of_terms = 0
             for t in range(self.trace_l):
                 num1 = cmath.exp(-k* t/self.trace_l * 2*cmath.pi * 1j)
@@ -179,12 +181,12 @@ class FourierTransform():
         range_end = len(self.aprox_trace)
         if self.draw_last_line:
             range_end = len(self.aprox_trace)+1
-        elif self.time == self.trace_l-1:
+        elif self.time-self.ttt == self.trace_l-1:
             self.draw_last_line = True
 
         # draw approximated curve
         for i in range(1, range_end):
-            color = canvas.fade_color(i, self.time, self.trace_l)
+            color = canvas.fade_color(i, self.time-self.ttt, self.trace_l)
             p1 = self.zoom_point(self.aprox_trace[i-1])
             p2 = self.zoom_point(self.aprox_trace[i % len(self.aprox_trace)])
             pygame.draw.line(canvas.display, color, (int(
@@ -206,10 +208,26 @@ class FourierTransform():
         return (self.center[0]*(1 - self.zoom) + point.real * self.zoom) + 1j*(self.center[1]*(1 - self.zoom) + point.imag * self.zoom)
 
     def record_point(self):
+        # pos = pygame.mouse.get_pos()
+        # if self.trace[-1] != pos:
+        #     self.trace.append(pos)ace_color)
         pos = pygame.mouse.get_pos()
-        if self.trace[-1] != pos:
-            self.trace.append(pos)
+        shifted_pos = [pos[0] - canvas.width//2, pos[1] - canvas.height//2]
+        if self.trace[-1] != shifted_pos:
+            self.trace.append(shifted_pos)
             canvas.display.set_at(pos, canvas.trace_color)
+
+    def change_n(self, amount):
+        self.ttt = self.time
+        if self.n + amount > 1:
+            self.n += amount
+        self.calculate_coeficients()
+        self.draw_last_line = False
+        self.aprox_trace = []
+  
+    def change_zoom(self, amount):
+        if self.zoom + amount > 0:
+            self.zoom += amount
 
     def reset(self):
         self.trace = []
@@ -239,8 +257,13 @@ def extract_svg():
                 f = i/POINTS_PER_PATH
                 complex_point = path.point(f)
                 # append points transposed to canvas size
-                fs.trace.append((complex_point.real/image_w*canvas.width,
-                                complex_point.imag/image_h*canvas.height))
+                fs.trace.append((complex_point.real/image_w*canvas.width - canvas.width//2,
+                                complex_point.imag/image_h*canvas.height - canvas.height//2))
+
+def current_stats():
+    z, n = fs.zoom, fs.n
+  
+    return z, n
 
 
 arg_parser = argparse.ArgumentParser()
@@ -283,8 +306,11 @@ else:
 
 
 prev_time, current_time = 0, 0
-press_z, press_x = -1, -1  # last time when key was pressed
-zoom_amount = 0.01
+arrows = [{"key": pygame.K_UP, "press_time": -1, "action": fs.change_zoom, "amount": 0.01, "delta": 0},
+        {"key": pygame.K_DOWN, "press_time": -1, "action": fs.change_zoom, "amount": -0.01, "delta": 0},
+        {"key": pygame.K_RIGHT, "press_time": -1, "action": fs.change_n, "amount": 1, "delta": 0},
+        {"key": pygame.K_LEFT, "press_time": -1, "action": fs.change_n, "amount": -1, "delta": 0}]
+
 
 while True:
     current_time = time.monotonic()
@@ -312,31 +338,21 @@ while True:
                 fs.toggle_lines = not fs.toggle_lines
             if e.key == pygame.K_c:
                 fs.toggle_circles = not fs.toggle_circles
-            if e.key == pygame.K_UP:
-                fs.zoom += zoom_amount
-                press_z = current_time
-            if e.key == pygame.K_DOWN:
-                if fs.zoom - zoom_amount > 0:
-                    fs.zoom -= zoom_amount
-                press_x = current_time
-            if e.key == pygame.K_RIGHT:
-                fs.n += 1
-                fs.calculate_coeficients()
-            if e.key == pygame.K_LEFT:
-                if fs.n > 0: fs.n -= 1
-                fs.calculate_coeficients()
+            for a in arrows:
+                if e.key == a["key"]:
+                    a['action'](a['amount'])
+                    a['press_time'] = current_time
         elif e.type == pygame.KEYUP:
-            if e.key == pygame.K_UP:
-                press_z = -1
-            if e.key == pygame.K_DOWN:
-                press_x = -1
+            for a in arrows:
+                if e.key == a["key"]:
+                    a["press_time"] = -1
+                    a['action'](a['delta'])
+                    a['delta'] = 0
 
-    #  hold the key
-    if press_z > 0 and current_time - press_z > HOLD_AFTER:
-        fs.zoom += zoom_amount
-    if press_x > 0 and current_time - press_x > HOLD_AFTER:
-        if fs.zoom - zoom_amount > 0:
-            fs.zoom -= zoom_amount
+    #  hold the arrow
+    for a in arrows:
+        if a["press_time"] > 0 and current_time - a["press_time"] > HOLD_AFTER:    
+            a['delta'] += a['amount']
 
     # drawing points
     if STATE == 1 and current_time - prev_time >= SAMPLE_RATE:
@@ -347,8 +363,9 @@ while True:
     if STATE == 2 and current_time - prev_time >= UPDATE_RATE:
         prev_time = current_time
         canvas.display.fill(canvas.bg_color)
-        canvas.print_zoom(fs.zoom)
         fs.calculate_point()
         fs.draw_curve()
+        canvas.print_stats(fs.zoom, fs.n)
+
 
     pygame.display.update()
