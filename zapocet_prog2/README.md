@@ -2,38 +2,34 @@
  
 Running the application does not require any special setup, besides installing libraries mentioned in *requirements.txt*
  
-The application can be in 3 different states: *idle*, *recording trace*, *running*. User can iterate forward with SPACE and rest the STATE to *idle* with R key. If the trace is taken from a svg file the application directly skipps to stage *running*
+The application can be in 3 different states 0: *idle*, 1: *recording trace*, 2: *running*. User can increment the STATE using SPACE and rest it to 0 with R key. If the trace is taken from a svg file the application directly skipps to stage 2.
  
 #### Comandline arguments
-* *set screen resolution:* -r width height
-* *input file:* -i image will scaled to screen
-* *number of approximation functions:* -n
-* *sampling rate for tracing mouse cursor:* -s
-* *point density in svg file per path:* -d
-* *window update rate:* -u
+* *set screen resolution:* -r \<width> \<height>
+* *select input file:* -i \<path>
+* *number of vectors:* -n \<int>
+* *#sampled points in path of svg file:* -d \<int>
+* *sampling rate for tracing mouse cursor (one point per n miliseconds):* -s \<int>
+* *window update rate (every n miliseconds):* -u \<int>
  
 #### GUI (mentioned in the welcome screen)
 * *quitting the app:* ESC
 * *toggling elements form view*
- * traced points: P
- * vector lines: L
- * circle on which the vector revolves: C
-* *zooming* (can speed up by holding the key)
- * zoom-in: ↑
- * zoom-out: ↓
-* *#vectors*
-  * increase: → 
-  * decrease: ←
+  * traced points: P
+  * vector lines: L
+  * circle on which the vector revolves: C
+ * zoom: in/out ↑/↓
+* #vectors: increase/decrease →/←
    
 ## Documentation
 The application is all inside one module and has a standard pygame structure with infinite loop. The functionality relies on two classes.
  
 #### Window
-Is responsible for the graphic interface. Presents the welcome screen as well as draws a grid in the beginning and contains all information about the "canvas".
+Is responsible for the graphic interface. Presents the welcome screen as well as draws a grid in the beginning, calculates fading of color and contains all information about the "canvas".
  
 #### Fourier Transform
 Does all the calculation. The two main functions are:
-* *calculate_coefficienet*: takes the traced points and calculates appropriate coefficient $c_k$ for each function
+* *calculate_coefficienet*: takes the traced points and calculates appropriate coefficient $c_k$ for each vector
 * *calculate_point*: is called in every iteration of t, it calculates the resulting point which is drawn by the tip of the last vector. It simultaneously draws the vectores and circle on which they rotate
  
 ## The idea behind it
@@ -49,7 +45,7 @@ $$\int_0^1{f(t)dt} = \int_0^1{c_{-n} e^{-n \cdot t2\pi i}} + ... + \int_0^1{c_{0
  
 We are able to split the integral and look at each term separately as the $t$ goes from zero to one. Every vector except the one with $c_0$ will make a whole number of rotations around the center, therefore their averages would be 0. Since $e^{0 \cdot t2\pi i}$ stays static the value $c_0$ would just be the position on which the vector has started. Now we can see that $\int_0^1{f(t)dt}$ in fact equals $c_0$.
  
-This neat trick can be further generalized to calculate any arbitrary coefficient $k$. The idea is to multiply the whole function by the expression which would stabilize the vector $k$. So, to *"kill"* the exponent in $c_k e^{k \cdot t2\pi i}$ needs to be multiplied by $e^{-k \cdot t2\pi i}$. We can be certain that there would not be any other static vector. The rotating frequencies for a  $\{-n, -n+1, ..., 0, ... n-1, n\}$ after applying $e^{-k \cdot t2\pi i}$ the set would shift and there would remain just one vector with the zero frequency. Finally we get formula:
+This neat trick can be further generalized to calculate any arbitrary coefficient $k$. The idea is to multiply the whole function by the expression which would stabilize the vector $c_k$. So, to *"kill"* the exponent in $c_k e^{k \cdot t2\pi i}$, $f(t)$ needs to be multiplied by $e^{-k \cdot t2\pi i}$. We can be certain that there would not be any other static vector. The rotating frequencies are  $\{-n, -n+1, ..., 0, ... n-1, n\}$ after applying $e^{-k \cdot t2\pi i}$, the set would shift and there would remain just one vector with the zero frequency. Finally we get formula:
  
 $$c_k = \int_0^1{f(t)e^{-k \cdot t2\pi i}}$$
  
