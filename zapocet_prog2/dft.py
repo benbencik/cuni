@@ -3,8 +3,9 @@
 import sys
 import time
 import cmath
-import pygame
 import argparse
+
+import pygame
 import svgpathtools
 
 
@@ -72,21 +73,19 @@ class Window():
             '↑/↓ to zoom in/out'
         ]
         ypos = self.height // 2 - 100
-        for i in range(len(message)):
-            text = self.font.render(message[i], True, self.font_color)
+        for i, msg in enumerate(message):
+            text = self.font.render(msg, True, self.font_color)
             self.display.blit(
                 text, ((self.width - text.get_width())//2, ypos + i*text.get_height()))
 
     def print_stats(self, scale, vectors):
-        for a in arrows:
-            if a['key'] in [pygame.K_UP, pygame.K_DOWN]:
-                scale += a['delta']
-            else:
-                vectors += a['delta']
+        for arr in arrows:
+            if arr['key'] in [pygame.K_LEFT, pygame.K_RIGHT]:
+                vectors += arr['delta']
         message = [f"Zoom: {round(scale, 2)}", f"#Vectors: {vectors*2}"]
         xpos, ypos = 20, self.width/30
-        for i in range(len(message)):
-            text = self.font.render(message[i], True, self.font_color)
+        for i, msg in enumerate(message):
+            text = self.font.render(msg, True, self.font_color)
             self.display.blit(text, ((xpos, ypos + i*text.get_height())))
 
     def reset(self):
@@ -119,7 +118,7 @@ class FourierTransform():
         self.zoom = 1
         self.center = [canvas.width//2, canvas.height//2]
         self.offset = [0, 0]
-        self.ttt = 0
+        self.color_shift = 0
 
     def calculate_coeficients(self):
         self.trace_l = len(self.trace)
@@ -134,11 +133,10 @@ class FourierTransform():
         for k in range(-self.n, self.n+1):
             sum_of_terms = 0
             for t in range(self.trace_l):
-                num1 = cmath.exp(-k* t/self.trace_l * 2*cmath.pi * 1j)
+                num1 = cmath.exp(-k * t/self.trace_l * 2*cmath.pi * 1j)
                 num2 = (self.trace[t][0] + self.trace[t][1] * 1j)
                 sum_of_terms += num1*num2
             self.coefficients.append(sum_of_terms/self.trace_l)
-        
 
     def calculate_point(self):
         z = canvas.width//2 + canvas.height//2*1j
@@ -181,12 +179,12 @@ class FourierTransform():
         range_end = len(self.aprox_trace)
         if self.draw_last_line:
             range_end = len(self.aprox_trace)+1
-        elif self.time-self.ttt == self.trace_l-1:
+        elif self.time-self.color_shift == self.trace_l-1:
             self.draw_last_line = True
 
         # draw approximated curve
         for i in range(1, range_end):
-            color = canvas.fade_color(i, self.time-self.ttt, self.trace_l)
+            color = canvas.fade_color(i, self.time-self.color_shift, self.trace_l)
             p1 = self.zoom_point(self.aprox_trace[i-1])
             p2 = self.zoom_point(self.aprox_trace[i % len(self.aprox_trace)])
             pygame.draw.line(canvas.display, color, (int(
@@ -205,7 +203,8 @@ class FourierTransform():
     def zoom_point(self, point):
         if round(self.zoom, 2) == 1:
             return point
-        return (self.center[0]*(1 - self.zoom) + point.real * self.zoom) + 1j*(self.center[1]*(1 - self.zoom) + point.imag * self.zoom)
+        return (self.center[0]*(1 - self.zoom) + point.real * self.zoom) + \
+            1j*(self.center[1]*(1 - self.zoom) + point.imag * self.zoom)
 
     def record_point(self):
         # pos = pygame.mouse.get_pos()
@@ -218,13 +217,13 @@ class FourierTransform():
             canvas.display.set_at(pos, canvas.trace_color)
 
     def change_n(self, amount):
-        self.ttt = self.time
-        if self.n + amount > 1:
+        self.color_shift = self.time
+        if self.n + amount > 0:
             self.n += amount
         self.calculate_coeficients()
         self.draw_last_line = False
         self.aprox_trace = []
-  
+
     def change_zoom(self, amount):
         if self.zoom + amount > 0:
             self.zoom += amount
@@ -234,8 +233,8 @@ class FourierTransform():
         self.aprox_trace = []
         self.coefficients = []
         self.time = 0
-        self.draw_last_line = False
         self.zoom = 1
+        self.draw_last_line = False
         self.toggle_circles = True
         self.toggle_lines = True
         self.toggle_points = True
@@ -257,14 +256,21 @@ def extract_svg():
                 f = i/POINTS_PER_PATH
                 complex_point = path.point(f)
                 # append points transposed to canvas size
-                fs.trace.append((complex_point.real/image_w*canvas.width - canvas.width//2,
+                ft.trace.append((complex_point.real/image_w*canvas.width - canvas.width//2,
                                 complex_point.imag/image_h*canvas.height - canvas.height//2))
 
-def current_stats():
-    z, n = fs.zoom, fs.n
-  
-    return z, n
-
+def hold_arrows():
+    for arr in arrows:
+        time_now = time.monotonic() 
+        if arr["hold"] and time_now - arr["press_time"] > REPEAT_AFTER:
+            arr["press_time"] = time_now
+            if arr['key'] in [pygame.K_UP, pygame.K_DOWN]:
+                arr['action'](arr['amount'])
+            elif ft.n + arr['delta'] + arr['amount'] > 0:
+                arr['delta'] += arr['amount']
+        elif arr["press_time"] > 0 and time_now - arr["press_time"] > HOLD_AFTER:
+            arr['hold'] = True
+        
 
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('-r', '--resolution', nargs=2,
@@ -274,7 +280,7 @@ arg_parser.add_argument('-i', '--input-file', type=str,
 arg_parser.add_argument('-n', '--num-of-functions', type=int,
                         default=100, help='number of functions used to approximate the curve')
 arg_parser.add_argument('-s', '--sampling-rate', type=int,
-                        default=100, help='mark trace of curve every n miliseconds')
+                        default=50, help='mark trace of curve every n miliseconds')
 arg_parser.add_argument('-u', '--update-rate', type=int, default=50,
                         help='one frame will take n miliseconds')
 arg_parser.add_argument('-d', '--point-density', type=int,
@@ -282,9 +288,9 @@ arg_parser.add_argument('-d', '--point-density', type=int,
 args = arg_parser.parse_args()
 
 canvas = Window(args.resolution)
-fs = FourierTransform(canvas.width, canvas.height, args.num_of_functions)
+ft = FourierTransform(canvas.width, canvas.height, args.num_of_functions)
 
-""" 
+"""
 application might be in 3 different STATEs
 0: idle
 1: recording points
@@ -294,10 +300,11 @@ STATE = 0
 SAMPLE_RATE = args.sampling_rate / 10e3  # mark trace every n miliseconds
 UPDATE_RATE = args.update_rate / 10e2  # move through time everty n miliseconds
 HOLD_AFTER = 0.5  # hold the zoom keys after n seconds
+REPEAT_AFTER = 0.01
 
 if args.input_file:
     extract_svg()
-    fs.calculate_coeficients()
+    ft.calculate_coeficients()
     STATE = 2  # trace is recorded skip 1 state
 else:
     canvas.draw_grid()
@@ -306,10 +313,14 @@ else:
 
 
 prev_time, current_time = 0, 0
-arrows = [{"key": pygame.K_UP, "press_time": -1, "action": fs.change_zoom, "amount": 0.01, "delta": 0},
-        {"key": pygame.K_DOWN, "press_time": -1, "action": fs.change_zoom, "amount": -0.01, "delta": 0},
-        {"key": pygame.K_RIGHT, "press_time": -1, "action": fs.change_n, "amount": 1, "delta": 0},
-        {"key": pygame.K_LEFT, "press_time": -1, "action": fs.change_n, "amount": -1, "delta": 0}]
+arrows = [{"key": pygame.K_UP, "press_time": -1, "hold": False,
+          "action": ft.change_zoom, "amount": 0.04, "delta": 0},
+          {"key": pygame.K_DOWN, "press_time": -1, "hold": False,
+          "action": ft.change_zoom, "amount": -0.04, "delta": 0},
+          {"key": pygame.K_RIGHT, "press_time": -1, "hold": False,
+          "action": ft.change_n, "amount": 1, "delta": 0},
+          {"key": pygame.K_LEFT, "press_time": -1, "hold": False,
+          "action": ft.change_n, "amount": -1, "delta": 0}]
 
 
 while True:
@@ -323,49 +334,45 @@ while True:
                 canvas.display.fill(canvas.bg_color)
                 if STATE == 0:
                     canvas.draw_grid()
-                    fs.trace = [pygame.mouse.get_pos()]
+                    ft.trace = [pygame.mouse.get_pos()]
                     prev_time = current_time
                 if STATE == 1:
-                    fs.calculate_coeficients()
+                    ft.calculate_coeficients()
                 STATE += 1
             if e.key == pygame.K_r:
                 STATE = 0
                 canvas.reset()
-                fs.reset()
+                ft.reset()
             if e.key == pygame.K_p:
-                fs.toggle_points = not fs.toggle_points
+                ft.toggle_points = not ft.toggle_points
             if e.key == pygame.K_l:
-                fs.toggle_lines = not fs.toggle_lines
+                ft.toggle_lines = not ft.toggle_lines
             if e.key == pygame.K_c:
-                fs.toggle_circles = not fs.toggle_circles
-            for a in arrows:
-                if e.key == a["key"]:
-                    a['action'](a['amount'])
-                    a['press_time'] = current_time
+                ft.toggle_circles = not ft.toggle_circles
+            for arr in arrows:
+                if e.key == arr["key"] and STATE == 2:
+                    arr['action'](arr['amount'])
+                    arr['press_time'] = current_time
         elif e.type == pygame.KEYUP:
-            for a in arrows:
-                if e.key == a["key"]:
-                    a["press_time"] = -1
-                    a['action'](a['delta'])
-                    a['delta'] = 0
-
-    #  hold the arrow
-    for a in arrows:
-        if a["press_time"] > 0 and current_time - a["press_time"] > HOLD_AFTER:    
-            a['delta'] += a['amount']
+            for arr in arrows:
+                if e.key == arr["key"] and STATE == 2:
+                    arr["press_time"] = -1
+                    arr['action'](arr['delta'])
+                    arr['delta'] = 0
+                    arr['hold'] = False
+    hold_arrows()
 
     # drawing points
     if STATE == 1 and current_time - prev_time >= SAMPLE_RATE:
         prev_time = current_time
-        fs.record_point()
+        ft.record_point()
 
     # run animation
     if STATE == 2 and current_time - prev_time >= UPDATE_RATE:
         prev_time = current_time
         canvas.display.fill(canvas.bg_color)
-        fs.calculate_point()
-        fs.draw_curve()
-        canvas.print_stats(fs.zoom, fs.n)
-
+        ft.calculate_point()
+        ft.draw_curve()
+        canvas.print_stats(ft.zoom, ft.n)
 
     pygame.display.update()
